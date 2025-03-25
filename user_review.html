@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reviews - MovieVerse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">
+            <img src="images/MovieVerse_Logo.png" alt="MovieVerse Logo" class="nav-logo">
+        </a>
+        <h1 class="nav-title">MovieVerse</h1>
+        <div class="nav-controls">
+            <div class="nav-search">
+                <input type="search" id="search-input" placeholder="Search movies..." required/>
+                <button class="search-btn" onclick="searchMovies()">🔍</button>
+            </div>
+            <div id="profile-container">
+                <span class="profile-icon">&#128100;</span>
+                <div id="profile-dropdown" class="profile-dropdown hidden">
+                    <ul>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="signup.html">Sign Up</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <header>
+        <h1>My Movie Reviews</h1>
+        <p>View all your uploaded reviews in one place.</p>
+    </header>
+
+    <!-- Reviews Section -->
+    <section class="reviews-container">
+        <h2>Your Reviews</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Movie</th>
+                    <th>Rating</th>
+                    <th>Review</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Inception</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>Amazing movie with mind-blowing twists!</td>
+                    <td>March 15, 2025</td>
+                </tr>
+                <tr>
+                    <td>Interstellar</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>One of the best sci-fi movies ever made.</td>
+                    <td>March 12, 2025</td>
+                </tr>
+                <tr>
+                    <td>Joker</td>
+                    <td>⭐⭐⭐⭐</td>
+                    <td>Dark, intense, and unforgettable.</td>
+                    <td>March 10, 2025</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 MovieVerse | All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
