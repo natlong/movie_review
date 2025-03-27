@@ -1,9 +1,9 @@
 <footer class="footer">
           <!-- Footer Links -->
     <div class="footer-links">
-        <a href="aboutUs.html" class="footer-link">About Us</a>
-        <a href="request.html" class="footer-link">Request a Movie</a>
-        <a href="support.html" class="footer-link">Support</a>
+        <a href="aboutUs.php" class="footer-link">About Us</a>
+        <a href="request.php" class="footer-link">Request a Movie</a>
+        <a href="support.php" class="footer-link">Support</a>
     </div>
   
     <!-- Copyright Section -->
