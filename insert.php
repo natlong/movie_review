@@ -1,9 +1,11 @@
 <?php
 session_start();
+
+// Include common header and navigation
 include 'inc/head.inc.php';
 include 'inc/nav.inc.php';
 
-// Connect to DB and fetch requests
+// Connect to DB and fetch movie requests from the "requests" table
 $config = parse_ini_file(__DIR__ . '/private/db-config.ini');
 if (!$config) {
     die("Error: Could not read DB configuration file.");
@@ -18,15 +20,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all movie requests
+// Fetch all requests
 $sql = "SELECT * FROM requests";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Insert New Movie</title>
-    <!-- Include any additional CSS or meta tags as needed -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
       /* Optional: Limit table height and enable scrolling */
       .table-container {
@@ -37,54 +42,77 @@ $result = $conn->query($sql);
 </head>
 <body>
 <main class="container mt-5">
+    <!-- Success/Error Messages -->
+    <?php if (isset($_GET['message'])): ?>
+        <div class="alert alert-success" role="alert" aria-live="polite">
+            <?php echo htmlspecialchars($_GET['message'], ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+    <?php endif; ?>
+    <?php if (isset($_GET['error'])): ?>
+        <div class="alert alert-danger" role="alert" aria-live="assertive">
+            <?php echo htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+    <?php endif; ?>
+
     <div class="row">
         <!-- LEFT COLUMN: Dynamic table of movie requests -->
         <div class="col-md-6 mb-4">
             <h2>Movie Requests</h2>
-            <div class="table-container">
+            <div class="table-container" role="region" aria-label="List of movie requests">
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Requested Movie</th>
+                            <th scope="col">No.</th>
+                            <th scope="col">Requested Movie</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if ($result && $result->num_rows > 0): ?>
+                            <?php $counter = 1; ?>
                             <?php while ($row = $result->fetch_assoc()): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($row['idrequests'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                    <td><?php echo $counter++; ?></td>
                                     <td><?php echo htmlspecialchars($row['request_name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                    <td>
+                                        <!-- Delete button linking to delete_request.php -->
+                                        <a href="delete_request.php?id=<?php echo urlencode($row['idrequests']); ?>" 
+                                           class="btn btn-sm btn-danger" role="button"
+                                           onclick="return confirm('Are you sure you want to delete this request?');">
+                                            Delete
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="2" class="text-center">No requests found.</td>
+                                <td colspan="3" class="text-center">No requests found.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
-        <!-- RIGHT COLUMN: Insert New Movie Form -->
+
+        <!-- RIGHT COLUMN: Form to insert a new movie -->
         <div class="col-md-6">
             <h2>Insert New Movie</h2>
-            <form action="insert_process.php" method="post" enctype="multipart/form-data">
+            <form action="insert_process.php" method="post" enctype="multipart/form-data" aria-label="Insert new movie form">
                 <div class="form-group">
                     <label for="movie_title">Movie Title</label>
-                    <input type="text" id="movie_title" name="movie_title" class="form-control" required>
+                    <input type="text" id="movie_title" name="movie_title" class="form-control" required aria-required="true">
                 </div>
                 <div class="form-group">
                     <label for="movie_description">Description</label>
-                    <textarea id="movie_description" name="movie_description" class="form-control" rows="4" required></textarea>
+                    <textarea id="movie_description" name="movie_description" class="form-control" rows="4" required aria-required="true"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="genre">Genre</label>
-                    <input type="text" id="genre" name="genre" class="form-control" required>
+                    <input type="text" id="genre" name="genre" class="form-control" required aria-required="true">
                 </div>
                 <div class="form-group">
                     <label for="poster">Movie Poster</label>
-                    <input type="file" id="poster" name="poster" class="form-control-file" accept="image/*" required>
+                    <input type="file" id="poster" name="poster" class="form-control-file" accept="image/*" required aria-required="true">
                 </div>
                 <button type="submit" class="btn btn-success">Insert Movie</button>
             </form>
@@ -95,5 +123,9 @@ $result = $conn->query($sql);
 $conn->close();
 include 'inc/footer.inc.php'; 
 ?>
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
