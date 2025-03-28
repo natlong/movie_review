@@ -1,5 +1,5 @@
 <nav>
-  <a href="index.html">
+  <a href="index.php">
       <img src="images/MovieVerse_Logo.png" alt="MovieVerse Logo" class="nav-logo">
   </a>
   <div class="nav-controls">
