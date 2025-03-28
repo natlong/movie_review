@@ -1,5 +1,44 @@
 <?php
-    require_once(__DIR__ . "/config.php");
+    function connectToDB(){
+        $file_path = "/var/www/private/db-config.ini";
+        if(!file_exists($file_path)){
+            $errorMsg = "Failed to read database config file, does not exist.";
+            $success = false;
+        }
+        if(!is_readable($file_path)){
+            $errorMsg = "Failed to read database config file, not readable.";
+            $success = false;
+        }
+
+        $config = parse_ini_file($file_path); 
+        if (!$config) 
+        { 
+            $errorMsg = "Failed to read database config file."; 
+            $success = false; 
+        } 
+        else{
+            $conn = new mysqli( 
+                $config['servername'], 
+                $config['username'], 
+                $config['password'], 
+                $config['dbname'] 
+            ); 
+
+            // Check connection 
+            if ($conn->connect_error) 
+            { 
+                $errorMsg = "Connection failed: " . $conn->connect_error; 
+                $success = false; 
+            } 
+        }
+        return $conn;
+    }
+
+    function closeDb(){
+        global $conn, $stmt;
+        $stmt->close();
+        $conn->close();
+    }
 
     //User Details Queries
     function getAllUsers(){
@@ -17,6 +56,15 @@
         $stmt->execute();
         return $stmt->get_result();
     }
+
+    function registerUser($username, $email, $password, $role = "user"){
+        global $conn;
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("sss", $username, $email, $password, $role);
+        $stmt->execute();
+        return $stmt->affected_rows;
+    }
+
     //Movie Details Queries
     function getAllMovies(){
         global $conn;

@@ -7,18 +7,18 @@
             <h1>Sign Up</h1>
         </header>
         <main class="auth-form-container">
-            <form id="signup-form">
+            <form id="signup-form" action="process_signup.php" method="POST">
             <div class="input-group">
                 <label for="signup-name">Full Name</label>
-                <input type="text" id="signup-name" placeholder="Enter your full name" required>
+                <input type="text" id="signup-name" name="name" placeholder="Enter your full name" required>
             </div>
             <div class="input-group">
                 <label for="signup-email">Email</label>
-                <input type="email" id="signup-email" placeholder="Enter your email" required>
+                <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
             </div>
             <div class="input-group">
                 <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" placeholder="Create a password" required>
+                <input type="password" id="signup-password" name="pwd" placeholder="Create a password" required>
             </div>
             <button type="submit" class="submit-btn">Sign Up</button>
             </form>
