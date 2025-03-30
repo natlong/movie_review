@@ -38,6 +38,8 @@
             if(password_verify($pwd, $user["password"])){
                 $_SESSION["user_id"] = $user["user_id"];
                 $_SESSION["username"] = $user["username"];
+                $_SESSION["email"] = $user["email"];
+                $_SESSION["profile_pic"] = $user["profile_pic"];
                 $_SESSION["role"] = $user["role"];
                 header("Location: index.php");
                 exit();

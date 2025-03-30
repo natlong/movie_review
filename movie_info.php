@@ -1,28 +1,31 @@
 <?php
+require_once 'sql/queries.php';
 $movieId = $_GET['id'] ?? null;
 if (!$movieId) die("Movie ID not provided.");
+$response = fetchMovieDetails($movieId);
 
-$apiKey = '0898e5d05464d2b33011428dac1eee0f';
+if (!$response) {
+    die("Movie not found.");
+}
 
-// Fetch movie details
-$details = json_decode(file_get_contents("https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&append_to_response=videos,credits,recommendations"), true);
-if (!$details || isset($details['status_code'])) die("Movie not found.");
+$movieData = $response['movieData'];
+$movieExists = $response['movieExists'];
 
-$title = htmlspecialchars($details['title']);
-$poster = "https://image.tmdb.org/t/p/w500" . $details['poster_path'];
-$overview = $details['overview'];
-$rating = number_format($details['vote_average'], 2);
-$release = $details['release_date'];
-$genres = implode(', ', array_column($details['genres'], 'name'));
-$videoKey = $details['videos']['results'][0]['key'] ?? null;
-$cast = array_slice($details['credits']['cast'], 0, 5);
-$recommendations = array_slice($details['recommendations']['results'], 0, 5);
+// Assign variables
+$title = $movieData['title'];
+$poster = $movieData['poster'];
+$overview = $movieData['overview'];
+$rating = $movieData['rating'];
+$release = $movieData['release'];
+$genres = $movieData['genres'];
+$videoKey = $movieData['videoKey'];
+$cast = $movieData['cast'];
+$recommendations = $movieData['recommendations'];
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <title><?= $title ?> - MovieVerse</title>
-  <link rel="stylesheet" href="style.css?v=<?= time(); ?>">
   <?php include 'inc/head.inc.php'; ?>
 </head>
 <body>
@@ -43,6 +46,15 @@ $recommendations = array_slice($details['recommendations']['results'], 0, 5);
         <input type="hidden" name="movie_id" value="<?= $movieId ?>">
         <button class="btn">+ Add to Watchlist</button>
       </form>
+
+      <div style="margin-top: 1rem;">
+        <?php if ($movieExists): ?>
+          <a href="write_review.php?id=<?= $movieId ?>"><button class="btn-review">✍️ Write a Review</button></a>
+        <?php else: ?>
+          <a href="insert.php?id=<?= $movieId ?>"><button class="btn-review">📬 Request to Write a Review</button></a>
+        <?php endif; ?>
+      </div>
+
     </div>
 
     <?php if (!empty($cast)): ?>

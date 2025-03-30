@@ -55,74 +55,114 @@
 
     //Movie Details Queries
     function getAllMovies(){
-        global $conn;
-        $stmt = $conn->prepare("SELECT movie_id, movie_title, movie_description, genre, ratings FROM movies");
+        $conn = connectToDB();
+        $stmt = $conn->prepare("SELECT movie_id, movie_title, movie_description, genre, ratings FROM movie");
         $stmt->execute();
         return $stmt->get_result();
+    }
+    function getAllMoviesByMovieId($movie_id){
+        $conn = connectToDB();
+        $stmt = $conn->prepare("SELECT movie_id, movie_title, movie_description, genre, ratings FROM movie WHERE movie_id = ?");
+        $stmt->bind_param("i", $movie_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        if ($result->num_rows > 0) {
+            return $result->fetch_assoc();  // Returns movie data if found
+        } else {
+            return null;  // Return null if no movie found
+        }
+
+        
     }
 
     //Review Details Queries
     function getAllReviews(){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT review_id, user_id, movie_id, review, rating, created_at FROM reviews");
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     function getReviewsByUserId($user_id){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT review_id, movie_id, review, rating, created_at FROM reviews WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result->fetch_assoc(); // Returns all reviews by the user
     }
 
     function getReviewsByMovieId($movie_id){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT review_id, user_id, review, rating, created_at FROM reviews WHERE movie_id = ?");
         $stmt->bind_param("i", $movie_id);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     function getReviewById($review_id){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT user_id, movie_id, review, rating, created_at FROM reviews WHERE review_id = ?");
         $stmt->bind_param("i", $review_id);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     //Watchlist Queries
     function getAllMoviesFromWatchList(){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT movie_id, user_id, created_at FROM watch_list");
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     function getMovieFromWatchListByUserId($user_id){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT movie_id, created_at FROM watch_list WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result->fetch_assoc();
     }
 
     //Liked Movies Queries
     function getAllMoviesFromLikedMovies(){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT movie_id, user_id, created_at FROM movie_likes");
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     function getAllMoviesFromLikedMoviesByUserId($user_id){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT movie_id, created_at FROM movie_likes WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
 
@@ -158,6 +198,38 @@
     
         // Get the first matching result
         return $data['results'][0]['id'] ?? null;
+    }
+    
+    function fetchMovieDetails($movieId) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';  // your API key
+    
+        // Fetch movie details from TMDb API
+        $details = json_decode(file_get_contents("https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&append_to_response=videos,credits,recommendations"), true);
+    
+        // If no movie found, return false
+        if (!$details || isset($details['status_code'])) {
+            return false; // or handle the error gracefully
+        }
+    
+        // Prepare the movie data
+        $movieData = [
+            'title' => htmlspecialchars($details['title']),
+            'poster' => "https://image.tmdb.org/t/p/w500" . $details['poster_path'],
+            'overview' => $details['overview'],
+            'rating' => number_format($details['vote_average'], 2),
+            'release' => $details['release_date'],
+            'genres' => implode(', ', array_column($details['genres'], 'name')),
+            'videoKey' => $details['videos']['results'][0]['key'] ?? null,
+            'cast' => array_slice($details['credits']['cast'], 0, 5),
+            'recommendations' => array_slice($details['recommendations']['results'], 0, 5)
+        ];
+    
+        // Check if the movie exists in your database
+        // $movieExists = getAllMoviesByMovieId($movieId);  // Your function to check if the movie exists in DB
+    
+        // Return both movie data and existence check result
+        // return ['movieData' => $movieData, 'movieExists' => $movieExists];
+        return ['movieData' => $movieData];
     }
     
     

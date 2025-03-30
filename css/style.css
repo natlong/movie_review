@@ -862,7 +862,145 @@ footer a:hover {
   padding-top: 1rem;
 }
 
+.btn-review {
+  background-color: #5cb85c;
+  color: black;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%
+}
 
+.btn-review:hover {
+  background-color: #4cae4c;
+}
+
+/* Profile Section */
+.profile-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #111;
+  color: white;
+}
+
+/* Profile Details Section */
+.profile-details {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.profile-image-container {
+  flex: 1;
+  text-align: center;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 2px solid #ccc;
+}
+
+.profile-info {
+  flex: 2;
+}
+
+.profile-info h2 {
+  font-size: 2rem;
+  color: #cc0000;
+  margin-bottom: 15px;
+}
+
+.profile-info p {
+  margin-bottom: 1rem;
+}
+
+.profile-info .btn {
+  background-color: #ffcc00;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.profile-info .btn:hover {
+  background-color: #ffdb4d;
+}
+
+/* Watchlist Section */
+.watchlist-container {
+  margin-top: 2rem;
+}
+
+.scroll-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.movie-card {
+  width: 200px;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.movie-card h4 {
+  margin-top: 10px;
+}
+
+.movie-card .btn {
+  background-color: #ffcc00;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.movie-card .btn:hover {
+  background-color: #ffdb4d;
+}
+
+/* Reviews Section */
+.reviews-container {
+  margin-top: 2rem;
+}
+
+.reviews-buttons a {
+  background-color: #ffcc00;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.reviews-buttons a:hover {
+  background-color: #ffdb4d;
+}
 
 
 
