@@ -43,11 +43,14 @@
         $conn = connectToDB();
         $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $username, $email, $password, $role);
-        $stmt->execute();
-        $result = $stmt->affected_rows;
+        if($stmt->execute()){
+            $user_id = $conn->insert_id;
+        }else{
+            $user_id = false;
+        }
         $stmt->close();
         $conn->close();
-        return $result;
+        return $user_id;
     }
 
     //Movie Details Queries
@@ -105,4 +108,69 @@
         $stmt->execute();
         return $stmt->get_result();
     }
+
+    //Liked Movies Queries
+    function getAllMoviesFromLikedMovies(){
+        global $conn;
+        $stmt = $conn->prepare("SELECT movie_id, user_id, created_at FROM movie_likes");
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    function getAllMoviesFromLikedMoviesByUserId($user_id){
+        global $conn;
+        $stmt = $conn->prepare("SELECT movie_id, created_at FROM movie_likes WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+
+    //API Queries - API Key 0898e5d05464d2b33011428dac1eee0f
+
+    function getTrendingMovies($limit = 10) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $url = "https://api.themoviedb.org/3/trending/movie/week?api_key=$apiKey";
+    
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+    
+        return array_slice($data['results'], 0, $limit);
+    }
+
+    function getRecommendedMovies($movie_id, $limit = 10) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $url = "https://api.themoviedb.org/3/movie/$movie_id/recommendations?api_key=$apiKey";
+    
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+    
+        return array_slice($data['results'], 0, $limit);
+    }
+
+    function searchMovieId($movie_title) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $query = urlencode($movie_title);
+        $url = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$query";
+    
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+    
+        // Get the first matching result
+        return $data['results'][0]['id'] ?? null;
+    }
+    
+    
+    
 ?>
+
+
+
+
+
+
+
+
+
+
+

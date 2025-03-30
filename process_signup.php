@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once 'sql/queries.php'; // or the correct path to queries.php
     // ini_set('display_errors', 1);
     // error_reporting(E_ALL);
@@ -56,6 +57,7 @@
         }
     }    
     if ($success) {
+        $_SESSION["user_id"] = $result; 
         $_SESSION["username"] = $name;
         $_SESSION["role"] = "user"; // Default role
         header("Location: signup.php?success=".urlencode("Account created successfully! You will be redirected to the profile page."));

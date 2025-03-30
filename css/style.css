@@ -160,6 +160,14 @@ nav {
   display: none !important;
 }
 
+.section-header{
+  color: white !important;
+  font-size: 1.2rem;
+  font-weight: bold !important;
+  margin: 2rem 1rem 1rem;
+  text-align: left !important; 
+}
+
 /* Movie Cards */
 .movie-card {
   background-color: #111 !important;
@@ -174,6 +182,24 @@ nav {
   flex-direction: column !important;
   justify-content: space-between !important;
 }
+
+.movie-card h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.movie-card p {
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+
 .movie-card:hover {
   transform: scale(1.05) !important;
 }
