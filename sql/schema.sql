@@ -62,8 +62,8 @@ CREATE TABLE ratings(
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE likes(
-    like_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE review_likes(
+    review_like_id INT AUTO_INCREMENT PRIMARY KEY,
     review_id INT NOT NULL,
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -71,8 +71,8 @@ CREATE TABLE likes(
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE dislikes(
-    dislike_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE review_dislikes(
+    review_dislike_id INT AUTO_INCREMENT PRIMARY KEY,
     review_id INT NOT NULL,
     user_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -87,4 +87,13 @@ CREATE TABLE watchlist(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
+)
+
+CREATE TABLE movie_likes(
+    movie_like_id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 )
