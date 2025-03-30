@@ -181,6 +181,7 @@ nav {
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
+  text-decoration: none !important;
 }
 
 .movie-card h3 {
@@ -197,8 +198,6 @@ nav {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-
 
 .movie-card:hover {
   transform: scale(1.05) !important;
@@ -237,6 +236,7 @@ nav {
   display: block !important;
   width: 100% !important;
   border: none !important;
+  text-decoration: none !important;
 }
 .btn:hover {
   background-color: #ffdb4d !important;
@@ -774,7 +774,93 @@ footer a:hover {
   background: #b30000;
 }
 
+/*Style for movie details*/
+.movie-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  color: white;
+  align-items: flex-start;
+}
 
+.movie-detail-poster {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.movie-info-cast-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2rem;
+  flex: 1;
+}
+
+.movie-detail-info {
+  flex: 2;
+  min-width: 300px;
+}
+
+.movie-cast {
+  flex: 1;
+  background-color: #1a1a1a;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.movie-cast h2 {
+  margin-bottom: 1rem;
+}
+
+.movie-cast ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.movie-cast li {
+  background-color: #333;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.movie-bottom-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 2rem;
+}
+
+.movie-trailer {
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+.movie-recommendations {
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+.scroll-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-top: 1rem;
+}
 
 
 

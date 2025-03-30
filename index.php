@@ -20,19 +20,21 @@
             <h3 class="section-header">🔥 Top 10 Movies this week</h3>
             <div class="scroll-container" id="movies-scroll">
                 <?php foreach ($trendingMovies as $movie): ?>
-                    <div class="movie-card">
-                    <img src="<?= $movie['poster_path'] 
-                        ? 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'] 
-                        : 'images/image_not_found.jpg' ?>" 
-                        alt="<?= $movie['title'] ?>" 
-                        class="movie-img">
-                        <!-- <h3><?= $movie['title'] ?></h3> -->
-                        <h3 title="<?= htmlspecialchars($movie['title']) ?>">
-                            <?= htmlspecialchars($movie['title']) ?>
-                        </h3>
-                        <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
-                        <button class="btn">+ Watchlist</button>
-                    </div>
+                    <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link" style="text-decoration: none;">
+                        <div class="movie-card">
+                        <img src="<?= $movie['poster_path'] 
+                            ? 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'] 
+                            : 'images/image_not_found.jpg' ?>" 
+                            alt="<?= $movie['title'] ?>" 
+                            class="movie-img">
+                            <!-- <h3><?= $movie['title'] ?></h3> -->
+                            <h3 title="<?= htmlspecialchars($movie['title']) ?>">
+                                <?= htmlspecialchars($movie['title']) ?>
+                            </h3>
+                            <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
+                            <button class="btn">+ Watchlist</button>
+                        </div>
+                    </a>
                 <?php endforeach; ?>
             </div>
 
