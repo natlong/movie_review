@@ -31,21 +31,23 @@
     }
 
     if ($success && $_SERVER["REQUEST_METHOD"] == "POST"){
-        $user = getUserDetailsByEmail($email);
+        $result = getUserDetailsByEmail($email);
 
-        if($user->num_rows > 0){
-            $user = $user->fetch_assoc();
-            if(password_verify($pwd, $user["pwd"])){
+        if($result && $result->num_rows > 0){
+            $user = $result->fetch_assoc();
+            if(password_verify($pwd, $user["password"])){
                 $_SESSION["user_id"] = $user["user_id"];
                 $_SESSION["username"] = $user["username"];
                 $_SESSION["role"] = $user["role"];
                 header("Location: index.php");
                 exit();
             }else{
+                echo "<script>console.log('❌ Password verification failed');</script>";
                 header("Location: login.php?error=Invalid username or password");
                 exit();
             }
         }
+        echo "<script>console.log('❌ No user found with that email');</script>";
         header("Location: login.php?error=Invalid username or password");
         exit();
     }

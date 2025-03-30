@@ -1,28 +1,16 @@
-<head>
-    <title>Process Register</title>
-    <?php include 'inc/head.inc.php'; ?>
-</head>
-<body>
-    <?php include 'inc/nav.inc.php'; ?>
-    
-    <?php
-    $file_path = "/var/www/private/db-config.ini";
-    
-    if (!file_exists($file_path)) {
-        die("❌ Database config file does NOT exist!");
-    }
-    if (!is_readable($file_path)) {
-        die("❌ Database config file is NOT readable!");
+<?php
+    require_once 'sql/queries.php'; // or the correct path to queries.php
+    // ini_set('display_errors', 1);
+    // error_reporting(E_ALL);
+    function sanitize_input($data) {
+        return htmlspecialchars(stripslashes(trim($data)));
     }
     
     // Initialize variables
     $name = $email = $errorMsg = "";
     $success = true;
     
-    function sanitize_input($data) {
-        return htmlspecialchars(stripslashes(trim($data)));
-    }
-    
+
     // Validate email
     if (empty($_POST['email'])) {
         $errorMsg .= "Email is required.<br>";
@@ -45,56 +33,41 @@
     
     // Validate passwords
     $pwd = $_POST['pwd'] ?? "";
-    
-    // Hash password securely
-    $hashed_pwd = password_hash($pwd, PASSWORD_DEFAULT);
-    
-    function saveMemberToDB() {
-        global $name, $email, $hashed_pwd, $errorMsg, $success;
-    
-        $config = parse_ini_file('/var/www/private/db-config.ini');
-        if (!$config) {
-            die("❌ Failed to read database config file.");
+    $confirm_pwd = $_POST['confirm_pwd'] ?? "";
+
+    if(empty($pwd || empty($confirm_pwd))) {
+        $errorMsg .= "Password is required.<br>";
+        $success = false;
+    } else {
+        if ($pwd !== $confirm_pwd) {
+            $errorMsg .= "Passwords do not match.";
+            $success = false;
         }
+    }
     
-        $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
-    
-        if ($conn->connect_error) {
-            die("❌ Connection failed: " . $conn->connect_error);
-        }
-    
+    if ($success && $_SERVER["REQUEST_METHOD"] == "POST"){
+        // Hash password securely
+        $hashed_pwd = password_hash($pwd, PASSWORD_DEFAULT);
         $result = registerUser($name, $email, $hashed_pwd);
-        if (!$result) {
+
+        if(!$result){
             $errorMsg = "❌ Failed to save member to database.";
             $success = false;
         }
-        $conn->close();
+    }    
+    if ($success) {
+        $_SESSION["username"] = $name;
+        $_SESSION["role"] = "user"; // Default role
+        header("Location: signup.php?success=".urlencode("Account created successfully! You will be redirected to the profile page."));
+        exit();
+    }else{
+        // Redirect to signup page with error message
+        header("Location: signup.php?error=" . urlencode($errorMsg));
+        exit();
     }
     
-    if ($success) {
-        saveMemberToDB();
-        echo '<div style="margin: 50px auto; width: 50%; text-align: left;">
-                <h2>Your registration is successful!</h2>
-                <h4> Thank you for signing up, '. htmlspecialchars($name) .'.</h4>
-                <a href="login.php" style="text-decoration: none;">
-                    <button style="background-color: #5cb85c; color: white; border: none; padding: 10px 15px; font-size: 16px; border-radius: 5px; cursor: pointer; display: inline-block; margin-top: 15px;">
-                        Log-in
-                    </button>
-                </a>
-            </div>';
-    } else {
-        echo '<div style="margin: 50px auto; width: 50%; text-align: left;">
-                <h2>Oops!</h2>
-                <h4>The following errors were detected:</h4>
-                <p>' . htmlspecialchars($errorMsg) . '</p>
-                <a href="register.php" style="text-decoration: none;">
-                    <button style="background-color: #d9534f; color: white; border: none; padding: 10px 15px; font-size: 16px; border-radius: 5px; cursor: pointer; display: inline-block; margin-top: 15px;">
-                        Return to Sign Up
-                    </button>
-                </a>
-            </div>';
-    }
     ?>
+    
     
     <?php include 'inc/footer.inc.php'; ?>
 </body>

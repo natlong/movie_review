@@ -1,68 +1,53 @@
 <?php
     function connectToDB(){
-        $file_path = "/var/www/private/db-config.ini";
-        if(!file_exists($file_path)){
-            $errorMsg = "Failed to read database config file, does not exist.";
-            $success = false;
+        $config = parse_ini_file('/var/www/private/db-config.ini');
+        if (!$config) {
+            die("❌ Failed to read database config file.");
         }
-        if(!is_readable($file_path)){
-            $errorMsg = "Failed to read database config file, not readable.";
-            $success = false;
-        }
-
-        $config = parse_ini_file($file_path); 
-        if (!$config) 
-        { 
-            $errorMsg = "Failed to read database config file."; 
-            $success = false; 
-        } 
-        else{
-            $conn = new mysqli( 
-                $config['servername'], 
-                $config['username'], 
-                $config['password'], 
-                $config['dbname'] 
-            ); 
-
-            // Check connection 
-            if ($conn->connect_error) 
-            { 
-                $errorMsg = "Connection failed: " . $conn->connect_error; 
-                $success = false; 
-            } 
+    
+        $conn = new mysqli($config['servername'], $config['username'], $config['password'], $config['dbname']);
+    
+        if ($conn->connect_error) {
+            die("❌ Connection failed: " . $conn->connect_error);
+        
         }
         return $conn;
     }
 
-    function closeDb(){
-        global $conn, $stmt;
-        $stmt->close();
-        $conn->close();
-    }
-
     //User Details Queries
     function getAllUsers(){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT user_id, username, email, password, profile_pic, role, created_at FROM users");
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     function getUserDetailsByEmail($email){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("SELECT user_id, username, email, password, profile_pic, role, created_at FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        return $stmt->get_result();
+        $result = $stmt->get_result();
+
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     function registerUser($username, $email, $password, $role = "user"){
-        global $conn;
+        $conn = connectToDB();
         $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sss", $username, $email, $password, $role);
+        $stmt->bind_param("ssss", $username, $email, $password, $role);
         $stmt->execute();
-        return $stmt->affected_rows;
+        $result = $stmt->affected_rows;
+        $stmt->close();
+        $conn->close();
+        return $result;
     }
 
     //Movie Details Queries
