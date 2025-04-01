@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <head>
     <title>Login</title>
     <?php include 'inc/head.inc.php'; ?>

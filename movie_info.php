@@ -1,15 +1,18 @@
 <?php
+session_start();
 require_once 'sql/queries.php';
 $movieId = $_GET['id'] ?? null;
 if (!$movieId) die("Movie ID not provided.");
 $response = fetchMovieDetails($movieId);
+$reviews = getReviewsByMovieId($movieId);
+
 
 if (!$response) {
     die("Movie not found.");
 }
 
 $movieData = $response['movieData'];
-$movieExists = $response['movieExists'];
+$movieExists = true; // Assume the movie exists since it's fetched from API
 
 // Assign variables
 $title = $movieData['title'];
@@ -21,6 +24,8 @@ $genres = $movieData['genres'];
 $videoKey = $movieData['videoKey'];
 $cast = $movieData['cast'];
 $recommendations = $movieData['recommendations'];
+
+$reviews = getReviewsByMovieId($movieId);
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,13 +53,10 @@ $recommendations = $movieData['recommendations'];
       </form>
 
       <div style="margin-top: 1rem;">
-        <?php if ($movieExists): ?>
-          <a href="write_review.php?id=<?= $movieId ?>"><button class="btn-review">✍️ Write a Review</button></a>
-        <?php else: ?>
-          <a href="insert.php?id=<?= $movieId ?>"><button class="btn-review">📬 Request to Write a Review</button></a>
-        <?php endif; ?>
+        <a href="submit_review.php?id=<?= $movieId ?>">
+          <button class="btn-review">✍️ Write a Review</button>
+        </a>
       </div>
-
     </div>
 
     <?php if (!empty($cast)): ?>
@@ -69,6 +71,29 @@ $recommendations = $movieData['recommendations'];
     <?php endif; ?>
   </div>
 </div>
+
+<!-- Review Section -->
+<div class="reviews-container">
+  <h2>User Reviews</h2>
+  <?php if (empty($reviews)): ?>
+    <p>No reviews yet. Be the first to write one!</p>
+  <?php else: ?>
+    <?php foreach ($reviews as $review): ?>
+      <div class="review-box">
+        <div class="review-header">
+          <img src="<?= $review['profile_pic'] ?: 'images/default-profile.png' ?>" alt="Profile Pic" class="review-profile-pic">
+          <strong><?= htmlspecialchars($review['username']) ?></strong>
+          <span class="review-date"><?= date("Y-m-d H:i", strtotime($review['created_at'])) ?></span>
+        </div>
+        <div class="review-body">
+          <p><?= nl2br(htmlspecialchars($review['review'])) ?></p>
+          <p>⭐ <?= number_format($review['rating'], 1) ?>/5</p>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</div>
+
 <div class="movie-bottom-row">
   <?php if ($videoKey): ?>
   <div class="movie-trailer">
@@ -84,7 +109,7 @@ $recommendations = $movieData['recommendations'];
     <h2>🎞️ Recommended</h2>
     <div class="scroll-container">
       <?php foreach ($recommendations as $rec): ?>
-        <a href="movie_info.php?id=<?= $rec['id'] ?>" class="movie-link"style="text-decoration: none;">
+        <a href="movie_info.php?id=<?= $rec['id'] ?>" class="movie-link" style="text-decoration: none;">
           <div class="movie-card">
             <img src="https://image.tmdb.org/t/p/w500<?= $rec['poster_path'] ?>" alt="<?= $rec['title'] ?>" class="movie-img">
             <h3><?= htmlspecialchars($rec['title']) ?></h3>
@@ -96,8 +121,6 @@ $recommendations = $movieData['recommendations'];
   </div>
   <?php endif; ?>
 </div>
-
-
 
 <?php include 'inc/footer.inc.php'; ?>
 </body>

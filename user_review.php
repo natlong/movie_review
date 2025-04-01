@@ -1,3 +1,8 @@
+<?php
+session_start();
+?>
+
+
 <head>
     <title>User Review</title>    
     <?php include 'includes/head.php'; ?>
