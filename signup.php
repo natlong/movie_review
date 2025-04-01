@@ -1,3 +1,8 @@
+<?php
+session_start();
+?>
+
+
 <head>
     <title>Sign Up</title>
     <?php include 'inc/head.inc.php'; ?>

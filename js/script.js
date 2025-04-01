@@ -1,214 +1,256 @@
-const scrollContainer = document.getElementById("movies-scroll");
-const recommendedContainer = document.getElementById("recommended-scroll");
-let selectedCategory = "All"; // Default category
-
-// Sample movie data with extra properties
-const movies = [
-  { 
-    title: "My Fault: London", 
-    rating: 7.6, 
-    image: "images/fault.jpg", 
-    category: "Drama",
-    year: 2020,
-    runtime: "1h 40m",
-    genres: ["Drama", "Romance"]
-  },
-  { 
-    title: "The White Lotus", 
-    rating: 8.0, 
-    image: "images/white.jpg", 
-    category: "Drama",
-    year: 2021,
-    runtime: "1h 30m",
-    genres: ["Drama", "Mystery"]
-  },
-  { 
-    title: "Daredevil: Born Again", 
-    rating: 8.8, 
-    image: "images/daredevil.jpg", 
-    category: "Action",
-    year: 2022,
-    runtime: "2h 15m",
-    genres: ["Action", "Superhero"]
-  },
-  { 
-    title: "Severance", 
-    rating: 8.7, 
-    image: "images/severance.jpg", 
-    category: "Sci-Fi",
-    year: 2023,
-    runtime: "1h 45m",
-    genres: ["Sci-Fi", "Thriller"]
-  },
-  { 
-    title: "The Brutalist", 
-    rating: 7.5, 
-    image: "images/brutalist.jpg", 
-    category: "Drama",
-    year: 2019,
-    runtime: "1h 50m",
-    genres: ["Drama"]
-  }
-];
-
-// Recommended Movies with extra properties
-const recommendedMovies = [
-  { 
-    title: "Blade Runner 2049", 
-    rating: 8.0, 
-    image: "images/bladerunner.jpg", 
-    category: "Sci-Fi",
-    year: 2017,
-    runtime: "2h 44m",
-    genres: ["Sci-Fi", "Thriller"]
-  },
-  { 
-    title: "Interstellar", 
-    rating: 8.6, 
-    image: "images/interstellar.jpg", 
-    category: "Sci-Fi",
-    year: 2014,
-    runtime: "2h 49m",
-    genres: ["Sci-Fi", "Adventure"]
-  },
-  { 
-    title: "Inception", 
-    rating: 8.8, 
-    image: "images/inception.jpg", 
-    category: "Action",
-    year: 2010,
-    runtime: "2h 28m",
-    genres: ["Action", "Sci-Fi"]
-  },
-  { 
-    title: "Dune", 
-    rating: 8.1, 
-    image: "images/dune.jpg", 
-    category: "Sci-Fi",
-    year: 2021,
-    runtime: "2h 35m",
-    genres: ["Sci-Fi", "Adventure"]
-  }
-];
-
-// Helper function to render movies in a container
-function renderMovies(moviesArray, container) {
-  container.innerHTML = "";
-  moviesArray.forEach(movie => {
-    const movieCard = document.createElement("div");
-    movieCard.classList.add("movie-card");
-    movieCard.innerHTML = `
-      <img src="${movie.image}" alt="${movie.title}" class="movie-img">
-      <h3>${movie.title}</h3>
-      <p class="movie-info">${movie.year} • ${movie.runtime} • ${movie.genres.join(", ")}</p>
-      <p class="movie-rating">⭐ ${movie.rating}</p>
-      <button class="btn">+ Watchlist</button>
-    `;
-    container.appendChild(movieCard);
-  });
+// Navigate to review page
+function navigateToReviewPage(movieId) {
+  window.location.href = 'reviews.php?movie=' + movieId;
 }
 
-// Sort an array based on the current sort selection
-function sortArray(arr) {
-  const sortValue = document.getElementById("sort-select").value;
-  const sortedArr = arr.slice();
-  if (sortValue === "rating-desc") {
-    sortedArr.sort((a, b) => b.rating - a.rating);
-  } else if (sortValue === "rating-asc") {
-    sortedArr.sort((a, b) => a.rating - b.rating);
-  } else if (sortValue === "year-desc") {
-    sortedArr.sort((a, b) => b.year - a.year);
-  } else if (sortValue === "year-asc") {
-    sortedArr.sort((a, b) => a.year - b.year);
-  }
-  return sortedArr;
-}
+let currentFeatured = 0;
+let spotlightInterval;
+let spotlightPaused = false;
 
-// Load Top Movies (with filtering and sorting)
-function loadMovies(category = "All") {
-  const filteredMovies = (category === "All")
-    ? movies
-    : movies.filter(movie => movie.category === category);
-  const sortedMovies = sortArray(filteredMovies);
-  renderMovies(sortedMovies, scrollContainer);
-}
+// Show the current featured movie
+function showFeatured(index) {
+  const cards = document.querySelectorAll(".featured-card");
+  if (!cards.length) return;
 
-// Load Recommended Movies (with filtering and sorting)
-function loadRecommendedMovies(category = "All") {
-  const filteredMovies = (category === "All")
-    ? recommendedMovies
-    : recommendedMovies.filter(movie => movie.category === category);
-  const sortedMovies = sortArray(filteredMovies);
-  renderMovies(sortedMovies, recommendedContainer);
-}
-
-// Scroll Functions
-function scrollLeft() {
-  scrollContainer.scrollBy({ left: -300, behavior: "smooth" });
-}
-function scrollRight() {
-  scrollContainer.scrollBy({ left: 300, behavior: "smooth" });
-}
-function scrollRecommendedLeft() {
-  recommendedContainer.scrollBy({ left: -300, behavior: "smooth" });
-}
-function scrollRecommendedRight() {
-  recommendedContainer.scrollBy({ left: 300, behavior: "smooth" });
-}
-
-// Search Movies
-function searchMovies() {
-  const searchQuery = document.getElementById("search-input").value.toLowerCase().trim();
-
-  const filteredMovies = movies.filter(movie => {
-    const matchesSearch = movie.title.toLowerCase().includes(searchQuery);
-    const matchesCategory = (selectedCategory === "All" || movie.category === selectedCategory);
-    return matchesSearch && matchesCategory;
+  cards.forEach((card, i) => {
+    card.classList.toggle("active", i === index);
+    card.style.opacity = i === index ? "1" : "0";
+    card.style.transition = "opacity 0.8s ease-in-out";
   });
 
-  const filteredRecommended = recommendedMovies.filter(movie => {
-    const matchesSearch = movie.title.toLowerCase().includes(searchQuery);
-    const matchesCategory = (selectedCategory === "All" || movie.category === selectedCategory);
-    return matchesSearch && matchesCategory;
-  });
-
-  renderMovies(sortArray(filteredMovies), scrollContainer);
-  renderMovies(sortArray(filteredRecommended), recommendedContainer);
+  currentFeatured = index;
 }
 
-// Function to re-sort movies on sort change
-function sortMovies() {
-  if (document.getElementById("search-input").value.trim() !== "") {
-    searchMovies();
-  } else {
-    loadMovies(selectedCategory);
-    loadRecommendedMovies(selectedCategory);
+// Go to the next featured movie
+function nextFeatured() {
+  const cards = document.querySelectorAll(".featured-card");
+  if (!cards.length) return;
+
+  const nextIndex = (currentFeatured + 1) % cards.length;
+  showFeatured(nextIndex);
+}
+
+// Go to the previous featured movie
+function prevFeatured() {
+  const cards = document.querySelectorAll(".featured-card");
+  if (!cards.length) return;
+
+  const prevIndex = (currentFeatured - 1 + cards.length) % cards.length;
+  showFeatured(prevIndex);
+}
+
+// Start the auto-rotation
+function startSpotlightInterval() {
+  spotlightInterval = setInterval(() => {
+    if (!spotlightPaused) {
+      nextFeatured();
+    }
+  }, 5000);
+}
+
+// Stop the auto-rotation
+function stopSpotlightInterval() {
+  clearInterval(spotlightInterval);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ Spotlight initialized");
+
+  showFeatured(currentFeatured);
+  startSpotlightInterval();
+
+  const spotlight = document.getElementById("featured-spotlight");
+  if (spotlight) {
+    spotlight.addEventListener("mouseenter", () => spotlightPaused = true);
+    spotlight.addEventListener("mouseleave", () => spotlightPaused = false);
   }
-}
 
-// Toggle dropdown menu
-document.getElementById("dropdown-button").addEventListener("click", () => {
-  const dropdownMenu = document.getElementById("dropdown-menu");
-  dropdownMenu.classList.toggle("hidden");
+  const nextBtn = document.getElementById("next-featured");
+  const prevBtn = document.getElementById("prev-featured");
+
+  if (nextBtn) nextBtn.addEventListener("click", nextFeatured);
+  if (prevBtn) prevBtn.addEventListener("click", prevFeatured);
 });
 
-// Handle category selection
-document.querySelectorAll(".category-option").forEach(option => {
-  option.addEventListener("click", function() {
-    selectedCategory = this.dataset.category;
-    document.getElementById("dropdown-button").textContent = `${selectedCategory} ⬇`;
-    // Hide the dropdown after selection
-    document.getElementById("dropdown-menu").classList.add("hidden");
-    // Clear search input when changing category
-    document.getElementById("search-input").value = "";
-    // Reload movies with current sort settings
-    loadMovies(selectedCategory);
-    loadRecommendedMovies(selectedCategory);
+
+//support.php
+document.querySelectorAll('.faq-question').forEach(button => {
+  button.addEventListener('click', () => {
+    const answer = button.nextElementSibling;
+    const plus = button.querySelector('.plus');
+    const isOpen = answer.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.plus').forEach(p => p.textContent = "+");
+
+    if (!isOpen) {
+      answer.classList.add('open');
+      plus.textContent = "−";
+    }
   });
 });
 
-// Load movies on page load
+
+
+//nav bar 
 document.addEventListener("DOMContentLoaded", () => {
-  loadMovies();
-  loadRecommendedMovies();
+  const profileToggle = document.getElementById("profile-toggle");
+  const profileDropdown = document.getElementById("profile-dropdown");
+
+  if (profileToggle && profileDropdown) {
+    profileToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle("hidden");
+
+      
+    });
+
+    // Category dropdown toggle
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdownBtn = document.getElementById("dropdown-button");
+  const dropdownMenu = document.getElementById("dropdown-menu");
+
+  if (dropdownBtn && dropdownMenu) {
+    dropdownBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle("hidden");
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!dropdownMenu.contains(e.target) && !dropdownBtn.contains(e.target)) {
+        dropdownMenu.classList.add("hidden");
+      }
+    });
+
+    // Category filter handling (optional functionality)
+    document.querySelectorAll(".category-option").forEach(option => {
+      option.addEventListener("click", (e) => {
+        const category = e.target.dataset.category;
+        dropdownBtn.textContent = `${category} ⬇`;
+        dropdownMenu.classList.add("hidden");
+
+        // You can call a filter function here if needed
+        // filterByCategory(category);
+      });
+    });
+  }
 });
+
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
+        profileDropdown.classList.add("hidden");
+      }
+    });
+  }
+});
+
+//watch list 
+function addToWatchlist(movieId) {
+  fetch('add_to_watchlist.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `movie_id=${movieId}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    showPopup(data.message, data.success ? 'success' : 'error');
+  })
+  .catch(err => {
+    console.error(err);
+    showPopup("Something went wrong.", "error");
+  });
+}
+
+function showPopup(message, type) {
+  const popup = document.createElement('div');
+  popup.className = `watchlist-popup ${type}`;
+  popup.textContent = message;
+  document.body.appendChild(popup);
+
+  setTimeout(() => popup.remove(), 3000);
+}
+
+//review function
+
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleReviewBtn = document.getElementById("toggle-review-form");
+  const reviewForm = document.getElementById("review-form");
+  const form = document.getElementById("submit-review-form");
+  const messageDiv = document.getElementById("review-message");
+
+  if (toggleReviewBtn && reviewForm) {
+    toggleReviewBtn.addEventListener("click", () => {
+      reviewForm.style.display = reviewForm.style.display === "none" ? "block" : "none";
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      const res = await fetch("submit_review.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await res.json();
+      messageDiv.textContent = result.message;
+      messageDiv.style.color = result.success ? "lightgreen" : "red";
+
+      if (result.success) {
+        form.reset();
+        reviewForm.style.display = "none";
+        setTimeout(() => location.reload(), 1000); // reload to show the new review
+      }
+    });
+  }
+});
+
+function sortMovies() {
+  const sortValue = document.getElementById("sort-select").value;
+  const movieCards = Array.from(document.querySelectorAll(".movie-card"));
+
+  // Try all common containers
+  const containers = [
+    document.querySelector(".scroll-container"),
+    document.querySelector(".movies-wrapper .movies-container"),
+    document.querySelector(".movie-grid"),
+    document.querySelector(".movie-list"),
+    document.querySelector(".category-results")
+  ];
+
+  const container = containers.find(c => c !== null);
+  if (!container || movieCards.length === 0) return;
+
+  movieCards.sort((a, b) => {
+    const ratingA = parseFloat(a.dataset.rating || 0);
+    const ratingB = parseFloat(b.dataset.rating || 0);
+    const yearA = parseInt(a.dataset.year || 0);
+    const yearB = parseInt(b.dataset.year || 0);
+
+    switch (sortValue) {
+      case "rating-desc":
+        return ratingB - ratingA;
+      case "rating-asc":
+        return ratingA - ratingB;
+      case "year-desc":
+        return yearB - yearA;
+      case "year-asc":
+        return yearA - yearB;
+      default:
+        return 0;
+    }
+  });
+
+  // Clear and re-append sorted cards
+  container.innerHTML = "";
+  movieCards.forEach(card => container.appendChild(card));
+}
+

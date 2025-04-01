@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once 'sql/queries.php';
+
+// ✅ Define whether the user is an admin
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+
 $trendingMovies = getTrendingMovies(10);
 $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as spotlight
 ?>
@@ -10,10 +14,10 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
     <title>MovieVerse</title>
     <?php include 'inc/head.inc.php'; ?>
-    <script src="/js/script.js?v=<?php echo time(); ?>" defer></script>
+    <script src="/js/script.js?v=<?= time() ?>" defer></script>
 </head>
 <body>
     <?php include 'inc/nav.inc.php'; ?>
@@ -57,15 +61,15 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
         </div>
     </section>
 
-    <!-- Movie Request CTA Section -->
-<section class="request-section">
-  <div class="request-inner">
-    <h2>🎥 Can’t find your movie?</h2>
-    <p>Send us a request and we’ll try to add it!</p>
-    <a href="request.php" class="btn">Request a Movie</a>
-  </div>
-</section>
-
+    <!-- ✅ Admin-only Insert Section -->
+    <?php if ($isAdmin): ?>
+    <section style="margin-top: 3rem; text-align: center;">
+      <h3 class="text-white">➕ Add a New Movie to the Database</h3>
+      <a href="insert.php" class="btn" style="margin-top: 1rem; background-color: gold; color: black;">
+        Insert Movie
+      </a>
+    </section>
+    <?php endif; ?>
 
     <?php include 'inc/footer.inc.php'; ?>
 </body>

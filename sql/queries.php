@@ -94,21 +94,41 @@
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
+        
+        $reviews = [];
+        while ($row = $result->fetch_assoc()) {
+            $reviews[] = $row;
+        }
+    
         $stmt->close();
         $conn->close();
-        return $result->fetch_assoc(); // Returns all reviews by the user
+        return $reviews; // ✅ Return array of reviews
     }
+    
 
-    function getReviewsByMovieId($movie_id){
+    function getReviewsByMovieId($movie_id) {
         $conn = connectToDB();
-        $stmt = $conn->prepare("SELECT review_id, user_id, review, rating, created_at FROM reviews WHERE movie_id = ?");
+        $stmt = $conn->prepare(
+            "SELECT r.review_id, r.user_id, r.review, r.rating, r.created_at, u.username, u.profile_pic
+             FROM reviews r
+             JOIN users u ON r.user_id = u.user_id
+             WHERE r.movie_id = ?
+             ORDER BY r.created_at DESC"
+        );
         $stmt->bind_param("i", $movie_id);
         $stmt->execute();
         $result = $stmt->get_result();
+    
+        $reviews = [];
+        while ($row = $result->fetch_assoc()) {
+            $reviews[] = $row;
+        }
+    
         $stmt->close();
         $conn->close();
-        return $result;
+        return $reviews;
     }
+    
 
     function getReviewById($review_id){
         $conn = connectToDB();
@@ -124,7 +144,7 @@
     //Watchlist Queries
     function getAllMoviesFromWatchList(){
         $conn = connectToDB();
-        $stmt = $conn->prepare("SELECT movie_id, user_id, created_at FROM watch_list");
+        $stmt = $conn->prepare("SELECT movie_id, user_id, created_at FROM watchlist");
         $stmt->execute();
         $result = $stmt->get_result();
         $stmt->close();
@@ -134,14 +154,34 @@
 
     function getMovieFromWatchListByUserId($user_id){
         $conn = connectToDB();
-        $stmt = $conn->prepare("SELECT movie_id, created_at FROM watch_list WHERE user_id = ?");
+        $stmt = $conn->prepare("SELECT movie_id, created_at FROM watchlist WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
+    
+        $movies = [];
+        while ($row = $result->fetch_assoc()) {
+            $movies[] = $row;
+        }
+    
         $stmt->close();
         $conn->close();
-        return $result->fetch_assoc();
+        return $movies;  // ✅ Ensure you're returning an array
     }
+    
+    
+    //reviews 
+    function getUserById($user_id) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("SELECT username, profile_pic FROM users WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        $conn->close();
+        return $result;
+    }
+    
 
     //Liked Movies Queries
     function getAllMoviesFromLikedMovies(){
@@ -230,6 +270,37 @@
         // Return both movie data and existence check result
         // return ['movieData' => $movieData, 'movieExists' => $movieExists];
         return ['movieData' => $movieData];
+    }
+    //top movie
+    function fetchTopRatedMovies($limit = 50) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $topMovies = [];
+    
+        $pages = ceil($limit / 20);
+        for ($page = 1; $page <= $pages; $page++) {
+            $url = "https://api.themoviedb.org/3/movie/top_rated?api_key=$apiKey&page=$page";
+            $response = file_get_contents($url);
+            $data = json_decode($response, true);
+    
+            if (!empty($data['results'])) {
+                $topMovies = array_merge($topMovies, $data['results']);
+            }
+        }
+    
+        return array_slice($topMovies, 0, $limit);
+    }
+    //search 
+    function searchMovies($query) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $url = 'https://api.themoviedb.org/3/search/movie?api_key=' . $apiKey . '&query=' . urlencode($query);
+    
+        $response = @file_get_contents($url);
+        if ($response === FALSE) {
+            return []; // Fail silently
+        }
+    
+        $data = json_decode($response, true);
+        return $data['results'] ?? [];
     }
     
     

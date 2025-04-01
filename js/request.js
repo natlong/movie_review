@@ -1,10 +1,9 @@
-document.getElementById("request-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    const requestInput = document.getElementById("request-input");
-    const movieName = requestInput.value.trim();
-    if (movieName !== "") {
-      alert(`Request for "${movieName}" received!`);
-      requestInput.value = "";
-    }
-  });
-  
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("request-form");
+  if (form) {
+    form.addEventListener("submit", function() {
+      const input = document.getElementById("request-input");
+      alert(`Request for "${input.value}" received!`);
+    });
+  }
+});
