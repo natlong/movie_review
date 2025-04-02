@@ -11,14 +11,14 @@ $errorMsg = "";
 $success = true;
 
 /**
- * Sanitize input
+ * Sanitize input to mitigate XSS.
  */
 function sanitize_input($data) {
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
-// Ensure the user is logged in.
-if (!isset($_SESSION['user_id'])) {
+// Ensure the user is logged in and that user_id, email, and username are available.
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['email']) || !isset($_SESSION['username'])) {
     $errorMsg = "User must be logged in to submit a support ticket.";
     $success = false;
 }
@@ -31,9 +31,8 @@ if (empty($_POST['question'])) {
     $message = sanitize_input($_POST['question']);
 }
 
-// ✅ Step 1: Load config file
+// Step 1: Load the DB config file.
 $config_path = "/var/www/private/db-config.ini";
-
 if (!file_exists($config_path)) {
     $errorMsg = "Config file does not exist.";
     $success = false;
@@ -48,7 +47,7 @@ if (!file_exists($config_path)) {
     }
 }
 
-// ✅ Step 2: Connect to DB if everything is okay
+// Step 2: Connect to the DB.
 if ($success) {
     $conn = new mysqli(
         $config['servername'],
@@ -56,22 +55,25 @@ if ($success) {
         $config['password'],
         $config['dbname']
     );
-
     if ($conn->connect_error) {
         $errorMsg = "DB connection failed: " . $conn->connect_error;
         $success = false;
     }
 }
 
-// ✅ Step 3: Insert into `support_messages` table
+// Step 3: Insert into support_messages table.
 if ($success) {
-    $stmt = $conn->prepare("INSERT INTO support_messages (user_id, message) VALUES (?, ?)");
+    $user_id    = $_SESSION['user_id'];
+    $user_email = $_SESSION['email'];
+    $username   = $_SESSION['username'];
+    
+    $stmt = $conn->prepare("INSERT INTO support_messages (user_id, user_email, username, message) VALUES (?, ?, ?, ?)");
     if (!$stmt) {
         $errorMsg = "Insert preparation failed: " . $conn->error;
         $success = false;
     } else {
-        $user_id = $_SESSION['user_id'];
-        $stmt->bind_param("is", $user_id, $message);
+        // Bind parameters: i for user_id, and s for email, username, and message.
+        $stmt->bind_param("isss", $user_id, $user_email, $username, $message);
         if (!$stmt->execute()) {
             $errorMsg = "Insert failed: " . $stmt->error;
             $success = false;
@@ -81,7 +83,7 @@ if ($success) {
     $conn->close();
 }
 
-// ✅ Step 4: Redirect back to support.php with result.
+// Step 4: Redirect back to support.php with result.
 if ($success) {
     header("Location: support.php?message=" . urlencode("✅ Support ticket submitted successfully."));
     exit();
@@ -90,4 +92,3 @@ if ($success) {
     exit();
 }
 ?>
-
