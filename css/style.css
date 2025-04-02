@@ -143,6 +143,43 @@ nav {
   position: relative;
 }
 
+
+/* Responsive: collapse nav links on small screens */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  #search-form {
+    width: 100%;
+  }
+
+  #search-input {
+    width: 100%;
+  }
+}
+
+
+
 /* Utility class to toggle visibility */
 .hidden {
   display: none !important;

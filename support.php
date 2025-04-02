@@ -11,7 +11,7 @@ session_start();
   <title>Support & FAQ - MovieVerse</title>
   <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
   <script src="/js/script.js?v=<?php echo time(); ?>" defer></script> 
-
+  <?php include 'inc/nav.inc.php'; ?>
 </head>
 <body>
   <header>
@@ -70,6 +70,7 @@ session_start();
 
   <footer>
     <p>Need more help? Contact us at <a href="mailto:support@movieverse.com">support@movieverse.com</a></p>
+    <?php include 'inc/footer.inc.php'; ?>
   </footer>
 
 </body>

@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// ✅ Admin Access Control
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    header("Location: index.php");
+    exit();
+}
+
 // Include common header and navigation
 include 'inc/head.inc.php';
 include 'inc/nav.inc.php';
@@ -8,6 +14,7 @@ include 'inc/nav.inc.php';
 // Connect to DB and fetch movie requests from the "requests" table
 require_once 'sql/queries.php';
 $conn = connectToDB();
+
 
 
 // Fetch all requests
