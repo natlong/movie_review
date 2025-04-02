@@ -65,7 +65,7 @@ session_start();
     <p>Submit your question below and our team will get back to you.</p>
 
     <!-- Form posts back to support.php -->
-    <form class="faq-form" action="support.php" method="POST" id="faq-form">
+    <form class="faq-form" action="support_process.php" method="POST" id="faq-form">
       <textarea id="question" name="question" rows="5" placeholder="Insert your question here..." required></textarea><br>
       <button type="submit">Submit Question</button>
     </form>
