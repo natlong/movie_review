@@ -41,7 +41,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <!-- Search with category dropdown -->
-    <form id="search-form" action="search.php" method="get">
+    <form id="search-form" action="search.php" method="get" class="nav-search">
       <input 
         type="search" 
         name="query" 
