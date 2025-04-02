@@ -291,17 +291,42 @@
     }
     //search 
     function searchMovies($query) {
-        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
-        $url = 'https://api.themoviedb.org/3/search/movie?api_key=' . $apiKey . '&query=' . urlencode($query);
+        $results = [];
     
-        $response = @file_get_contents($url);
-        if ($response === FALSE) {
-            return []; // Fail silently
+        // TMDb API search
+        $apiKey = 'YOUR_API_KEY';
+        $url = "https://api.themoviedb.org/3/search/movie?api_key={$apiKey}&query=" . urlencode($query);
+        $apiResponse = file_get_contents($url);
+        $data = json_decode($apiResponse, true);
+        if ($data && isset($data['results'])) {
+            $results = array_slice($data['results'], 0, 10); // Limit API results
         }
     
-        $data = json_decode($response, true);
-        return $data['results'] ?? [];
+        // Local DB search
+        $conn = connectToDB();
+        if ($conn) {
+            $stmt = $conn->prepare("SELECT * FROM movie WHERE movie_title LIKE CONCAT('%', ?, '%')");
+            $stmt->bind_param("s", $query);
+            $stmt->execute();
+            $dbResult = $stmt->get_result();
+    
+            while ($row = $dbResult->fetch_assoc()) {
+                $results[] = [
+                    'id' => $row['movie_id'],
+                    'title' => $row['movie_title'],
+                    'release_date' => 'N/A',
+                    'vote_average' => 0,
+                    'poster_path' => $row['img_link'] // your local img
+                ];
+            }
+    
+            $stmt->close();
+            $conn->close();
+        }
+    
+        return $results;
     }
+    
     
     
     

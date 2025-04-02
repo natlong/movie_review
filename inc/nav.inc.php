@@ -16,6 +16,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Admin-Only Insert Movie Link -->
     <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
     <a href="insert.php" class="nav-link"> ➕Insert Movie</a>
+    <a href="admin_support.php" class="nav-link"> View Support Messages</a>
   <?php endif; ?>
 
   <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">

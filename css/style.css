@@ -19,12 +19,37 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
+  padding: 15px 20px;
   flex-wrap: wrap;
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link{
+  padding: 8px 12px;
+}
+
+/* Force column layout on small screens */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px; /* smaller gap if you want them closer */
+    margin-top: 10px; /* some spacing under the logo */
+  }
+  
+  .nav-link {
+    margin: 0;      /* remove horizontal margin */
+    padding: 8px 0; /* vertical padding to separate links */
+    width: 100%;    /* each link can stretch full width if you like */
+  }
 }
 
 /* Logo */
