@@ -2,7 +2,6 @@
 session_start();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +9,9 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Support & FAQ - MovieVerse</title>
   <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
-  <script src="/js/script.js?v=<?php echo time(); ?>" defer></script> 
+  <!-- NEW: Link the popup CSS -->
+  <link rel="stylesheet" href="css/support_popup.css?v=<?php echo time(); ?>">
+  <script src="/js/script.js?v=<?php echo time(); ?>" defer></script>
   <?php include 'inc/nav.inc.php'; ?>
 </head>
 <body>
@@ -22,13 +23,14 @@ session_start();
   <section class="faq-container">
     <h2>Frequently Asked Questions</h2>
 
+    <!-- Your FAQ items -->
     <div class="faq-item">
       <button class="faq-question">How do I create an account?<span class="plus">+</span></button>
       <div class="faq-answer">
         <p>Click on the "Sign Up" button on the homepage and fill in your details. A confirmation email will be sent to activate your account.</p>
       </div>
     </div>
-
+    
     <div class="faq-item">
       <button class="faq-question">How do I submit a movie review?<span class="plus">+</span></button>
       <div class="faq-answer">
@@ -62,7 +64,8 @@ session_start();
     <h2>Didn't find your question?</h2>
     <p>Submit your question below and our team will get back to you.</p>
 
-    <form class="faq-form" action="#" method="POST">
+    <!-- Form posts back to support.php -->
+    <form class="faq-form" action="support.php" method="POST" id="faq-form">
       <textarea id="question" name="question" rows="5" placeholder="Insert your question here..." required></textarea><br>
       <button type="submit">Submit Question</button>
     </form>
@@ -73,5 +76,19 @@ session_start();
     <?php include 'inc/footer.inc.php'; ?>
   </footer>
 
+  <!-- NEW: Popup HTML (hidden by default) -->
+  <div id="login-popup" class="popup-overlay hidden">
+    <div class="popup-content">
+      <span class="popup-close" id="popup-close">&times;</span>
+      <p>Please log in first or contact us at <a href="mailto:support@movieverse.com">support@movieverse.com</a> to submit your question.</p>
+    </div>
+  </div>
+
+  <!-- NEW: Inline script to set logged in status from PHP -->
+  <script>
+    var isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+  </script>
+  <!-- NEW: Link the popup JS -->
+  <script src="js/support_popup.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
