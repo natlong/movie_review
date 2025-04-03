@@ -1338,6 +1338,7 @@ footer a:hover {
 /* Watchlist Section */
 .watchlist-container {
   margin-top: 2rem;
+  text-decoration: none !important;
 }
 
 .scroll-container {
@@ -2104,5 +2105,40 @@ nav.transparent {
   font-size: 0.9rem;
   color: #ddd; /* ⬅️ Make subtitle/info text lighter */
 }
+.profile-form {
+  margin-top: 15px;
+}
+.upload-status {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 4px;
+}
+.upload-status.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+.upload-status.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
 
 
+/* Add this to your existing CSS or include inline for immediate effect */
+.profile-pic {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.profile-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.profile-icon {
+  margin-right: 5px;
+}

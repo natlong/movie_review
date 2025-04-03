@@ -14,6 +14,65 @@ $userId = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 $email = $_SESSION['email'];
 
+// Handle profile picture upload
+$upload_message = '';
+$profile_image = 'images/default-profile.png'; // Default image
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_picture'])) {
+    $upload_dir = 'uploads/profile_pics/';
+    
+    // Create directory if it doesn't exist
+    if (!file_exists($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+    
+    $file = $_FILES['profile_picture'];
+    $filename = $file['name'];
+    $tmp_name = $file['tmp_name'];
+    $file_error = $file['error'];
+    $file_size = $file['size'];
+    
+    // Get file extension
+    $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+    
+    // Generate a unique filename
+    $new_filename = $userId . '_' . time() . '.' . $file_ext;
+    $target_file = $upload_dir . $new_filename;
+    
+    // Validate file
+    if ($file_error === 0) {
+        if ($file_size <= 5000000) { // 5MB max
+            if (in_array($file_ext, $allowed_extensions)) {
+                // Move uploaded file
+                if (move_uploaded_file($tmp_name, $target_file)) {
+                    // Update user's profile picture in database
+                    if (updateProfilePicture($userId, $target_file)) {
+                        $_SESSION['profile_pic'] = $target_file;
+                        $upload_message = "Profile picture updated successfully!";
+                    } else {
+                        $upload_message = "Error updating profile picture in database.";
+                    }
+                } else {
+                    $upload_message = "Failed to upload file.";
+                }
+            } else {
+                $upload_message = "Only JPG, JPEG, PNG and GIF files are allowed.";
+            }
+        } else {
+            $upload_message = "File is too large. Maximum size is 5MB.";
+        }
+    } else {
+        $upload_message = "Error uploading file: " . $file_error;
+    }
+}
+
+// Get user's profile picture
+$user_profile = getUserProfile($userId);
+if ($user_profile && isset($user_profile['profile_pic']) && !empty($user_profile['profile_pic'])) {
+    $profile_image = $user_profile['profile_pic'];
+}
+
 $watchlist = getMovieFromWatchListByUserId($userId);
 $hasWatchlist = is_array($watchlist) && count($watchlist) > 0;
 
@@ -37,11 +96,24 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
     <!-- Profile Info -->
     <div class="profile-details">
       <div class="profile-image-container">
-        <img src="images/default-profile.png" alt="Profile Picture" class="profile-image">
+        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" class="profile-image">
       </div>
       <div class="profile-info">
         <h2><?= htmlspecialchars($username) ?></h2>
         <p>Email: <?= htmlspecialchars($email) ?></p>
+        
+        <!-- Profile Picture Upload Form -->
+        <form class="profile-form" action="<?= $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
+          <input type="file" name="profile_picture" accept="image/*">
+          <button type="submit" class="btn">Upload Profile Picture</button>
+        </form>
+        
+        <?php if (!empty($upload_message)): ?>
+          <div class="upload-status <?= strpos($upload_message, 'successfully') !== false ? 'success' : 'error' ?>">
+            <?= $upload_message ?>
+          </div>
+        <?php endif; ?>
+        
         <a href="change_password.php" class="btn">Change Password</a>
       </div>
     </div>
