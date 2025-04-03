@@ -2111,4 +2111,40 @@ nav.transparent {
   color: #ddd; /* ⬅️ Make subtitle/info text lighter */
 }
 
+* Genre bar styling */
+.genre-bar {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px 0;
+  white-space: nowrap;
+  scrollbar-width: thin; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+.genre-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.genre-btn {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.genre-btn:hover {
+  background-color: #555;
+}
+
+.genre-btn.active {
+  background-color: #fff;
+  color: #000;
+}
+
 
