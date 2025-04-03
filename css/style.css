@@ -1535,10 +1535,16 @@ button {
   flex: 1;
   font-size: 14px;
   padding: 8px 5px;}
+
 .movies-wrapper {
-  max-width: 1200px; /* or whatever width you prefer */
-  margin: 0 auto;    /* centers the container */
-  padding: 0 20px;   /* optional horizontal padding */}
+  position: relative; /* or whatever width you prefer */
+  margin: 0 auto; } 
+
+.movie-link{
+  text-decoration: none; 
+  border: none; 
+  outline: none
+}
 .nav-links li a {
   color: white !important;
   text-decoration: none !important;
@@ -2097,7 +2103,7 @@ nav.transparent {
 .movie-card h3 {
   font-size: 1rem;
   margin: 0.5rem 0 0.3rem;
-  color: #fff; /* ⬅️ Make title white */
+  color: #fff !important; /* ⬅️ Make title white */
 }
 
 .movie-card p {
