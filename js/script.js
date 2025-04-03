@@ -53,8 +53,82 @@ function stopSpotlightInterval() {
   clearInterval(spotlightInterval);
 }
 
+// Attach event listeners to popcorn icons for rating (only for index.php/index.html)
+function attachPopcornEventListeners() {
+  const popcornIcons = document.querySelectorAll('.movies-wrapper .popcorn-icon'); // Only target popcorn icons in the "Top 10 Movies" section
+  const ratingOverlay = document.getElementById('rating-overlay');
+  const ratingPopup = document.getElementById('rating-popup');
+  const popupMovieTitle = document.getElementById('popup-movie-title');
+  const popcornRating = document.getElementById('popcorn-rating');
+  const popcornImages = popcornRating?.querySelectorAll('img') || [];
+  const submitRatingBtn = document.getElementById('submit-rating');
+
+  let selectedRating = 0;
+  let currentMovieId = null;
+
+  popcornIcons.forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent the surrounding <a> tag from navigating
+      e.stopPropagation(); // Stop the event from bubbling up to the <a> tag
+      currentMovieId = icon.getAttribute('data-movie-id');
+      const movieTitle = icon.getAttribute('data-movie-title');
+      popupMovieTitle.textContent = movieTitle;
+
+      // Reset previous selections
+      selectedRating = 0;
+      popcornImages.forEach(img => img.classList.remove('selected'));
+
+      // Show the popup and overlay
+      if (ratingOverlay && ratingPopup) {
+        ratingOverlay.style.display = 'block';
+        ratingPopup.style.display = 'block';
+      }
+    });
+  });
+
+  popcornImages.forEach(img => {
+    img.addEventListener('click', () => {
+      selectedRating = parseInt(img.getAttribute('data-value'));
+      popcornImages.forEach(p => p.classList.remove('selected'));
+      for (let i = 0; i < selectedRating; i++) {
+        popcornImages[i].classList.add('selected');
+      }
+    });
+  });
+
+  if (submitRatingBtn) {
+    submitRatingBtn.addEventListener('click', () => {
+      if (selectedRating > 0) {
+        console.log(`Movie ID: ${currentMovieId}, Rating: ${selectedRating} popcorns`);
+        alert(`You rated ${popupMovieTitle.textContent} with ${selectedRating}/5 popcorns!`);
+
+        // Here you can add code to save the rating to a database via an API call
+        // Example: fetch('submit_rating.php', { method: 'POST', body: JSON.stringify({ movieId: currentMovieId, rating: selectedRating }) });
+
+        // Close the popup
+        if (ratingOverlay && ratingPopup) {
+          ratingOverlay.style.display = 'none';
+          ratingPopup.style.display = 'none';
+        }
+      } else {
+        alert('Please select a rating before submitting.');
+      }
+    });
+  }
+
+  if (ratingOverlay) {
+    ratingOverlay.addEventListener('click', () => {
+      ratingOverlay.style.display = 'none';
+      ratingPopup.style.display = 'none';
+    });
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Spotlight initialized");
+
+  // Attach popcorn rating event listeners (only for index.php/index.html)
+  attachPopcornEventListeners();
 
   showFeatured(currentFeatured);
   startSpotlightInterval();
@@ -72,8 +146,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (prevBtn) prevBtn.addEventListener("click", prevFeatured);
 });
 
-
-//support.php
+// Support.php
 document.querySelectorAll('.faq-question').forEach(button => {
   button.addEventListener('click', () => {
     const answer = button.nextElementSibling;
@@ -91,9 +164,7 @@ document.querySelectorAll('.faq-question').forEach(button => {
   });
 });
 
-
-
-//nav bar 
+// Nav bar 
 document.addEventListener("DOMContentLoaded", () => {
   const profileToggle = document.getElementById("profile-toggle");
   const profileDropdown = document.getElementById("profile-dropdown");
@@ -102,12 +173,17 @@ document.addEventListener("DOMContentLoaded", () => {
     profileToggle.addEventListener("click", (e) => {
       e.stopPropagation();
       profileDropdown.classList.toggle("hidden");
-
-      
     });
 
-    // Category dropdown toggle
-document.addEventListener("DOMContentLoaded", () => {
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
+        profileDropdown.classList.add("hidden");
+      }
+    });
+  }
+
+  // Category dropdown toggle
   const dropdownBtn = document.getElementById("dropdown-button");
   const dropdownMenu = document.getElementById("dropdown-menu");
 
@@ -138,17 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
-        profileDropdown.classList.add("hidden");
-      }
-    });
-  }
-});
-
-//watch list 
 function addToWatchlist(movieId) {
   fetch('add_to_watchlist.php', {
     method: 'POST',
@@ -176,8 +241,8 @@ function showPopup(message, type) {
   setTimeout(() => popup.remove(), 3000);
 }
 
-//review function
 
+// Review function
 document.addEventListener("DOMContentLoaded", () => {
   const toggleReviewBtn = document.getElementById("toggle-review-form");
   const reviewForm = document.getElementById("review-form");
@@ -233,7 +298,7 @@ function sortMovies() {
     const ratingA = parseFloat(a.dataset.rating || 0);
     const ratingB = parseFloat(b.dataset.rating || 0);
     const yearA = parseInt(a.dataset.year || 0);
-    const yearB = parseInt(b.dataset.year || 0);
+    const yearB = parseInt(a.dataset.year || 0);
 
     switch (sortValue) {
       case "rating-desc":
@@ -253,4 +318,3 @@ function sortMovies() {
   container.innerHTML = "";
   movieCards.forEach(card => container.appendChild(card));
 }
-

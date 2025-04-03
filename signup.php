@@ -46,7 +46,7 @@ session_start();
             </div>
             <div class="input-group">
                 <label for="signup-confirm-password">Confirm Password</label>
-                <input type="confirm_password" id="signup-confirm-password" name="confirm_pwd" placeholder="Create a password" required>
+                <input type="password" id="signup-confirm-password" name="confirm_pwd" placeholder="Create a password" required>
             </div>
             <button type="submit" class="submit-btn">Sign Up</button>
             </form>

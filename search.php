@@ -6,9 +6,25 @@ $searchQuery = $_GET['query'] ?? '';
 $searchResults = [];
 
 if ($searchQuery) {
-  $searchResults = searchMovies($searchQuery); // function from queries.php
+    $searchResults = searchMovies($searchQuery); // this returns both API + DB movies
+}
+
+function getPosterURL($posterPath) {
+    if (!$posterPath) {
+        return 'images/image_not_found.jpg';
+    }
+
+    // Check if it's a TMDb path (starts with "/") or our DB (starts with "imgs/" or "uploads/")
+    if (str_starts_with($posterPath, '/')) {
+        return 'https://image.tmdb.org/t/p/w200' . $posterPath;
+    } elseif (str_starts_with($posterPath, 'imgs/') || str_starts_with($posterPath, 'uploads/')) {
+        return $posterPath;
+    }
+
+    return 'images/image_not_found.jpg';
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,11 +48,11 @@ if ($searchQuery) {
     <div class="search-results">
       <?php foreach ($searchResults as $movie): ?>
         <a href="movie_info.php?id=<?= $movie['id'] ?>" class="search-result-item">
-          <img src="<?= $movie['poster_path'] ? 'https://image.tmdb.org/t/p/w200' . $movie['poster_path'] : 'images/image_not_found.jpg' ?>" alt="<?= htmlspecialchars($movie['title']) ?>">
+          <img src="<?= getPosterURL($movie['poster_path'] ?? $movie['img_link'] ?? null) ?>" alt="<?= htmlspecialchars($movie['title']) ?>">
           <div class="search-info">
             <h3><?= htmlspecialchars($movie['title']) ?></h3>
-            <p><?= $movie['release_date'] ?? 'TBA' ?></p>
-            <div class="rating">⭐ <?= number_format($movie['vote_average'], 1) ?></div>
+            <p><?= $movie['release_date'] ?? 'N/A' ?></p>
+            <div class="rating">⭐ <?= number_format($movie['vote_average'] ?? $movie['ratings'] ?? 0, 1) ?></div>
           </div>
         </a>
       <?php endforeach; ?>

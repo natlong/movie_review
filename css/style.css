@@ -19,12 +19,37 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
+  padding: 15px 20px;
   flex-wrap: wrap;
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link{
+  padding: 8px 12px;
+}
+
+/* Force column layout on small screens */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px; /* smaller gap if you want them closer */
+    margin-top: 10px; /* some spacing under the logo */
+  }
+  
+  .nav-link {
+    margin: 0;      /* remove horizontal margin */
+    padding: 8px 0; /* vertical padding to separate links */
+    width: 100%;    /* each link can stretch full width if you like */
+  }
 }
 
 /* Logo */
@@ -66,14 +91,18 @@ nav {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Search input */
 #search-input {
-  border: none;
-  outline: none;
-  font-size: 14px;
-  color: #000;
-  background: transparent;
-  width: 150px;
+  color: #000 !important;                /* Force black text */
+  -webkit-text-fill-color: #000 !important; /* WebKit fix */
+  -webkit-text-stroke-width: 0 !important;  /* Remove stroke if any */
+  -webkit-text-stroke-color: #000 !important;
+  caret-color: #000 !important;          /* Black cursor */
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  width: 150px !important;
 }
 
 /* Search button */
@@ -142,6 +171,43 @@ nav {
   cursor: pointer;
   position: relative;
 }
+
+
+/* Responsive: collapse nav links on small screens */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  #search-form {
+    width: 100%;
+  }
+
+  #search-input {
+    width: 100%;
+  }
+}
+
+
 
 /* Utility class to toggle visibility */
 .hidden {
@@ -405,6 +471,30 @@ nav {
 .watchlist-popup.error {
   background-color: #dc3545; /* red */
 }
+
+.watchlist-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #222;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  font-size: 16px;
+  opacity: 0.95;
+  transition: all 0.3s ease;
+}
+
+.watchlist-popup.success {
+  background-color: #28a745;
+}
+
+.watchlist-popup.error {
+  background-color: #dc3545;
+}
+
 
 
 .movies-container {
@@ -1469,10 +1559,16 @@ button {
   flex: 1;
   font-size: 14px;
   padding: 8px 5px;}
+
 .movies-wrapper {
-  max-width: 1200px; /* or whatever width you prefer */
-  margin: 0 auto;    /* centers the container */
-  padding: 0 20px;   /* optional horizontal padding */}
+  position: relative; /* or whatever width you prefer */
+  margin: 0 auto; } 
+
+.movie-link{
+  text-decoration: none; 
+  border: none; 
+  outline: none
+}
 .nav-links li a {
   color: white !important;
   text-decoration: none !important;
@@ -1812,6 +1908,216 @@ nav {
   flex-wrap: nowrap !important; /* Keep everything on one line */
   position: relative !important;
   transition: background-color 0.3s ease !important;}
+
+  /* Navbar General Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #a61c1c; /* Reddish background to match the theme */
+  padding: 10px 20px;
+}
+
+/* Nav Controls (contains all navigation elements) */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Nav Menu (contains Top 250, Category, and Profile) */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Existing Global and Navigation styles remain unchanged */
+
+/* New styles for hamburger menu and nav-menu */
+.hamburger-menu {
+  display: none; /* hidden on desktop */
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.hamburger-menu span {
+  width: 100%;
+  height: 3px;
+  background-color: #fff; /* white lines to contrast with the theme */
+  margin: 3px 0;
+  transition: all 0.3s ease;
+}
+
+/* Mobile View adjustments */
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: flex;
+  }
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 60px; /* adjust based on navbar height */
+    right: 10px;
+    width: 200px;
+    background-color: #cc0000; /* MovieVerse theme color */
+    flex-direction: column;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+  }
+  .nav-menu.active {
+    display: flex;
+  }
+  .nav-menu .nav-category,
+  .nav-menu #profile-container {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+  }
+  /* Adjust dropdown and profile inside nav-menu */
+  #dropdown-button {
+    width: 100%;
+    border-radius: 0;
+  }
+  #dropdown-menu {
+    width: 100%;
+    position: static;
+  }
+  #profile-dropdown {
+    width: 100%;
+    position: static;
+    background-color: #cc0000;
+    box-shadow: none;
+  }
+  #profile-dropdown li {
+    padding: 10px 0;
+  }
+  #profile-dropdown li a {
+    color: #fff;
+  }
+  #profile-dropdown li:hover {
+    background-color: #b30000;
+  }
+  /* Keep sort and search visible */
+  .nav-sort,
+  .nav-search {
+    display: flex;
+  }
+  #search-input {
+    width: 150px;
+  }
+}
+
+
+.search-btn {
+  background-color: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Mobile View (below 768px) */
+@media (max-width: 768px) {
+  /* Show the hamburger menu icon */
+  .hamburger-menu {
+      display: flex;
+  }
+
+  /* Hide the nav menu by default in mobile view */
+  .nav-menu {
+      display: none;
+      position: absolute;
+      top: 60px; /* Adjust based on navbar height */
+      left: 0;
+      width: 100%;
+      background-color: #a61c1c; /* Match the reddish theme */
+      flex-direction: column;
+      padding: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Show the nav menu when active */
+  .nav-menu.active {
+      display: flex;
+  }
+
+  /* Style the nav menu items in mobile view */
+  .nav-menu .nav-link,
+  .nav-menu .nav-category,
+  .nav-menu #profile-container {
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+  }
+
+  /* Adjust the category dropdown in mobile view */
+  .nav-category {
+      width: 100%;
+  }
+
+  #dropdown-button {
+      width: 100%;
+      border-radius: 0;
+  }
+
+  #dropdown-menu {
+      width: 100%;
+      position: static;
+  }
+
+  /* Adjust the profile dropdown in mobile view */
+  #profile-container {
+      width: 100%;
+  }
+
+  #profile-dropdown {
+      width: 100%;
+      position: static;
+      background-color: #a61c1c; /* Match the reddish theme */
+      box-shadow: none;
+  }
+
+  #profile-dropdown li {
+      padding: 10px 0;
+  }
+
+  #profile-dropdown li a {
+      color: #fff;
+  }
+
+  #profile-dropdown li:hover {
+      background-color: #8b1717; /* Slightly darker red on hover */
+  }
+
+  /* Keep Sort By and Search visible */
+  .nav-sort,
+  .nav-search {
+      display: flex;
+  }
+
+  /* Adjust search bar width in mobile view */
+  #search-input {
+      width: 150px;
+  }
+}
+
+/* Hamburger Menu Animation (when clicked) */
+.hamburger-menu.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
 /* New Navigation Links */
 .nav-left {
   display: flex;
@@ -1826,24 +2132,11 @@ nav {
   border-radius: 5px;
   text-align: left;
   max-width: 90%;}
-/* Optional: Add hover effect */
-.popcorn-icon:hover {
-  opacity: 1;}
-/* Optional: Add hover effect for stars and popcorn */
-.popcorn-icon:hover {
-  opacity: 1;}
-/* Popcorn Icon Rating Styles */
-.star-rating {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;}
 /* Recent Requests Section */
 .recent-requests {
   max-width: 600px;
   margin: 0 auto 40px auto;
   text-align: left;}
-/* Request Form Container */
 /* Request Form Styles */
 .request-form-container {
   background-color: #1a1a1a;
@@ -2031,7 +2324,7 @@ nav.transparent {
 .movie-card h3 {
   font-size: 1rem;
   margin: 0.5rem 0 0.3rem;
-  color: #fff; /* ⬅️ Make title white */
+  color: #fff !important; /* ⬅️ Make title white */
 }
 
 .movie-card p {
@@ -2040,3 +2333,98 @@ nav.transparent {
 }
 
 
+/* Container for the watchlist button and heart icon */
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Slightly increased space between the watchlist button and heart icon */
+  margin-top: 10px;
+}
+
+/* Specific styling for the Top 10 section watchlist button */
+.top10-watchlist-btn {
+  background-color: #f5c518; /* Yellow color */
+  color: #000;
+  padding: 10px 20px; /* Increased padding for a larger button */
+  border: none;
+  border-radius: 6px; /* Slightly larger border-radius for a smoother look */
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px; /* Increased font size for the button text */
+}
+
+/* Styling for the heart icon */
+.like-icon {
+  font-size: 24px; /* Increased size of the heart icon */
+  cursor: pointer;
+  color: #ccc; /* Default empty heart color (gray) */
+  transition: color 0.3s ease;
+}
+
+/* Filled heart (liked state) */
+.like-icon.liked {
+  color: #ff0000; /* Pure red color for the filled heart */
+  font-size: 24px; /* Ensure the size remains consistent */
+  content: "❤️"; /* Filled heart emoji */
+}
+
+/* Hover effect for the heart icon */
+.like-icon:hover {
+  color: #ff4d4d; /* Slightly lighter red on hover for the empty state */
+}
+
+/* Hide dropdown by default */
+.profile-dropdown.hidden {
+  display: none;
+}
+
+/* Position dropdown under profile */
+.profile-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.profile-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-dropdown ul li {
+  margin: 5px 0;
+}
+
+.profile-dropdown ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.profile-dropdown ul li a:hover {
+  color: gold;
+}
+
+/* Profile picture container */
+.nav-profile-pic {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Profile image */
+.nav-profile-pic img.profile-pic {
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid white;
+}

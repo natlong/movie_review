@@ -291,29 +291,105 @@
     }
     //search 
     function searchMovies($query) {
-        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
-        $url = 'https://api.themoviedb.org/3/search/movie?api_key=' . $apiKey . '&query=' . urlencode($query);
+        $results = [];
     
-        $response = @file_get_contents($url);
-        if ($response === FALSE) {
-            return []; // Fail silently
+        // TMDb API search
+        $apiKey = 'YOUR_API_KEY';
+        $url = "https://api.themoviedb.org/3/search/movie?api_key={$apiKey}&query=" . urlencode($query);
+        $apiResponse = file_get_contents($url);
+        $data = json_decode($apiResponse, true);
+        if ($data && isset($data['results'])) {
+            $results = array_slice($data['results'], 0, 10); // Limit API results
         }
     
-        $data = json_decode($response, true);
-        return $data['results'] ?? [];
+        // Local DB search
+        $conn = connectToDB();
+        if ($conn) {
+            $stmt = $conn->prepare("SELECT * FROM movie WHERE movie_title LIKE CONCAT('%', ?, '%')");
+            $stmt->bind_param("s", $query);
+            $stmt->execute();
+            $dbResult = $stmt->get_result();
+    
+            while ($row = $dbResult->fetch_assoc()) {
+                $results[] = [
+                    'id' => $row['movie_id'],
+                    'title' => $row['movie_title'],
+                    'release_date' => 'N/A',
+                    'vote_average' => 0,
+                    'poster_path' => $row['img_link'] // your local img
+                ];
+            }
+    
+            $stmt->close();
+            $conn->close();
+        }
+    
+        return $results;
     }
     
+    // Profile picture functions
     
+    /**
+     * Update user's profile picture in the users table
+     * 
+     * @param int $userId The user ID
+     * @param string $path Path to the profile picture
+     * @return bool True if successful, false otherwise
+     */
+    function updateUserProfilePic($userId, $path) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("UPDATE users SET profile_pic = ? WHERE user_id = ?");
+        $stmt->bind_param("si", $path, $userId);
+        $result = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $result;
+    }
+
+    /**
+     * Get user's profile information including profile picture
+     * 
+     * @param int $userId The user ID
+     * @return array|null User data or null if not found
+     */
+    function getUserProfile($userId) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("SELECT username, email, profile_pic, role, created_at FROM users WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $userData = $result->fetch_assoc();
+        } else {
+            $userData = null;
+        }
+        
+        $stmt->close();
+        $conn->close();
+        return $userData;
+    }
+
+    /**
+     * Update user's profile picture in the users table
+     * This function is designed to be used with the profile picture upload feature
+     * 
+     * @param int $userId The user ID
+     * @param string $picturePath Path to the profile picture
+     * @return bool True if successful, false otherwise
+     */
+    function updateProfilePicture($userId, $picturePath) {
+        return updateUserProfilePic($userId, $picturePath);
+    }
+
+    function updateUserPassword($user_id, $new_password) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+        $stmt->bind_param("si", $new_password, $user_id);
+        $result = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $result;
+    }
     
 ?>
-
-
-
-
-
-
-
-
-
-
-
