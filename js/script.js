@@ -7,7 +7,6 @@ let currentFeatured = 0;
 let spotlightInterval;
 let spotlightPaused = false;
 
-// Show the current featured movie
 function showFeatured(index) {
   const cards = document.querySelectorAll(".featured-card");
   if (!cards.length) return;
@@ -21,25 +20,20 @@ function showFeatured(index) {
   currentFeatured = index;
 }
 
-// Go to the next featured movie
 function nextFeatured() {
   const cards = document.querySelectorAll(".featured-card");
   if (!cards.length) return;
-
   const nextIndex = (currentFeatured + 1) % cards.length;
   showFeatured(nextIndex);
 }
 
-// Go to the previous featured movie
 function prevFeatured() {
   const cards = document.querySelectorAll(".featured-card");
   if (!cards.length) return;
-
   const prevIndex = (currentFeatured - 1 + cards.length) % cards.length;
   showFeatured(prevIndex);
 }
 
-// Start the auto-rotation
 function startSpotlightInterval() {
   spotlightInterval = setInterval(() => {
     if (!spotlightPaused) {
@@ -48,14 +42,76 @@ function startSpotlightInterval() {
   }, 5000);
 }
 
-// Stop the auto-rotation
 function stopSpotlightInterval() {
   clearInterval(spotlightInterval);
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+function attachPopcornEventListeners() {
+  const popcornIcons = document.querySelectorAll('.movies-wrapper .popcorn-icon');
+  const ratingOverlay = document.getElementById('rating-overlay');
+  const ratingPopup = document.getElementById('rating-popup');
+  const popupMovieTitle = document.getElementById('popup-movie-title');
+  const popcornRating = document.getElementById('popcorn-rating');
+  const popcornImages = popcornRating?.querySelectorAll('img') || [];
+  const submitRatingBtn = document.getElementById('submit-rating');
+
+  let selectedRating = 0;
+  let currentMovieId = null;
+
+  popcornIcons.forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      currentMovieId = icon.getAttribute('data-movie-id');
+      const movieTitle = icon.getAttribute('data-movie-title');
+      popupMovieTitle.textContent = movieTitle;
+
+      selectedRating = 0;
+      popcornImages.forEach(img => img.classList.remove('selected'));
+
+      if (ratingOverlay && ratingPopup) {
+        ratingOverlay.style.display = 'block';
+        ratingPopup.style.display = 'block';
+      }
+    });
+  });
+
+  popcornImages.forEach(img => {
+    img.addEventListener('click', () => {
+      selectedRating = parseInt(img.getAttribute('data-value'));
+      popcornImages.forEach(p => p.classList.remove('selected'));
+      for (let i = 0; i < selectedRating; i++) {
+        popcornImages[i].classList.add('selected');
+      }
+    });
+  });
+
+  if (submitRatingBtn) {
+    submitRatingBtn.addEventListener('click', () => {
+      if (selectedRating > 0) {
+        alert(`You rated ${popupMovieTitle.textContent} with ${selectedRating}/5 popcorns!`);
+        if (ratingOverlay && ratingPopup) {
+          ratingOverlay.style.display = 'none';
+          ratingPopup.style.display = 'none';
+        }
+      } else {
+        alert('Please select a rating before submitting.');
+      }
+    });
+  }
+
+  if (ratingOverlay) {
+    ratingOverlay.addEventListener('click', () => {
+      ratingOverlay.style.display = 'none';
+      ratingPopup.style.display = 'none';
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Spotlight initialized");
 
+  attachPopcornEventListeners();
   showFeatured(currentFeatured);
   startSpotlightInterval();
 
@@ -67,118 +123,27 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const nextBtn = document.getElementById("next-featured");
   const prevBtn = document.getElementById("prev-featured");
-
   if (nextBtn) nextBtn.addEventListener("click", nextFeatured);
   if (prevBtn) prevBtn.addEventListener("click", prevFeatured);
-});
 
+  // FAQ Toggle
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const answer = button.nextElementSibling;
+      const plus = button.querySelector('.plus');
+      const isOpen = answer.classList.contains('open');
 
-//support.php
-document.querySelectorAll('.faq-question').forEach(button => {
-  button.addEventListener('click', () => {
-    const answer = button.nextElementSibling;
-    const plus = button.querySelector('.plus');
-    const isOpen = answer.classList.contains('open');
+      document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.plus').forEach(p => p.textContent = "+");
 
-    // Close all
-    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
-    document.querySelectorAll('.plus').forEach(p => p.textContent = "+");
-
-    if (!isOpen) {
-      answer.classList.add('open');
-      plus.textContent = "−";
-    }
-  });
-});
-
-
-
-//nav bar 
-document.addEventListener("DOMContentLoaded", () => {
-  const profileToggle = document.getElementById("profile-toggle");
-  const profileDropdown = document.getElementById("profile-dropdown");
-
-  if (profileToggle && profileDropdown) {
-    profileToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      profileDropdown.classList.toggle("hidden");
-
-      
-    });
-
-    // Category dropdown toggle
-document.addEventListener("DOMContentLoaded", () => {
-  const dropdownBtn = document.getElementById("dropdown-button");
-  const dropdownMenu = document.getElementById("dropdown-menu");
-
-  if (dropdownBtn && dropdownMenu) {
-    dropdownBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdownMenu.classList.toggle("hidden");
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!dropdownMenu.contains(e.target) && !dropdownBtn.contains(e.target)) {
-        dropdownMenu.classList.add("hidden");
+      if (!isOpen) {
+        answer.classList.add('open');
+        plus.textContent = "−";
       }
     });
-
-    // Category filter handling (optional functionality)
-    document.querySelectorAll(".category-option").forEach(option => {
-      option.addEventListener("click", (e) => {
-        const category = e.target.dataset.category;
-        dropdownBtn.textContent = `${category} ⬇`;
-        dropdownMenu.classList.add("hidden");
-
-        // You can call a filter function here if needed
-        // filterByCategory(category);
-      });
-    });
-  }
-});
-
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
-        profileDropdown.classList.add("hidden");
-      }
-    });
-  }
-});
-
-//watch list 
-function addToWatchlist(movieId) {
-  fetch('add_to_watchlist.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: `movie_id=${movieId}`
-  })
-  .then(res => res.json())
-  .then(data => {
-    showPopup(data.message, data.success ? 'success' : 'error');
-  })
-  .catch(err => {
-    console.error(err);
-    showPopup("Something went wrong.", "error");
   });
-}
 
-function showPopup(message, type) {
-  const popup = document.createElement('div');
-  popup.className = `watchlist-popup ${type}`;
-  popup.textContent = message;
-  document.body.appendChild(popup);
-
-  setTimeout(() => popup.remove(), 3000);
-}
-
-//review function
-
-document.addEventListener("DOMContentLoaded", () => {
+  // Review Form Toggle
   const toggleReviewBtn = document.getElementById("toggle-review-form");
   const reviewForm = document.getElementById("review-form");
   const form = document.getElementById("submit-review-form");
@@ -207,17 +172,43 @@ document.addEventListener("DOMContentLoaded", () => {
       if (result.success) {
         form.reset();
         reviewForm.style.display = "none";
-        setTimeout(() => location.reload(), 1000); // reload to show the new review
+        setTimeout(() => location.reload(), 1000);
       }
     });
   }
 });
 
+function addToWatchlist(movieId) {
+  fetch('add_to_watchlist.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `movie_id=${movieId}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    showPopup(data.message, data.success ? 'success' : 'error');
+  })
+  .catch(err => {
+    console.error(err);
+    showPopup("Something went wrong.", "error");
+  });
+}
+
+function showPopup(message, type) {
+  const popup = document.createElement('div');
+  popup.className = `watchlist-popup ${type}`;
+  popup.textContent = message;
+  document.body.appendChild(popup);
+
+  setTimeout(() => popup.remove(), 3000);
+}
+
 function sortMovies() {
   const sortValue = document.getElementById("sort-select").value;
   const movieCards = Array.from(document.querySelectorAll(".movie-card"));
 
-  // Try all common containers
   const containers = [
     document.querySelector(".scroll-container"),
     document.querySelector(".movies-wrapper .movies-container"),
@@ -236,21 +227,32 @@ function sortMovies() {
     const yearB = parseInt(b.dataset.year || 0);
 
     switch (sortValue) {
-      case "rating-desc":
-        return ratingB - ratingA;
-      case "rating-asc":
-        return ratingA - ratingB;
-      case "year-desc":
-        return yearB - yearA;
-      case "year-asc":
-        return yearA - yearB;
-      default:
-        return 0;
+      case "rating-desc": return ratingB - ratingA;
+      case "rating-asc": return ratingA - ratingB;
+      case "year-desc": return yearB - yearA;
+      case "year-asc": return yearA - yearB;
+      default: return 0;
     }
   });
 
-  // Clear and re-append sorted cards
   container.innerHTML = "";
   movieCards.forEach(card => container.appendChild(card));
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const profileToggle = document.getElementById("profile-toggle");
+  const profileDropdown = document.getElementById("profile-dropdown");
+
+  if (profileToggle && profileDropdown) {
+    profileToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle("hidden");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
+        profileDropdown.classList.add("hidden");
+      }
+    });
+  }
+});

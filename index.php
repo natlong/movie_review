@@ -36,26 +36,29 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
     </section>
 
     <!-- Top 10 Movies -->
-    <section class="movies-wrapper">
-        <header class="header-title">🔥 Top 10 on MovieVerse this week</header>
-        <div class="scroll-container">
-            <?php foreach ($trendingMovies as $movie): ?>
-                <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link" style="text-decoration: none; border: none; outline: none;">
-                    <div class="movie-card">
-                        <img src="<?= $movie['poster_path'] ? 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'] : 'images/image_not_found.jpg' ?>" 
-                             alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
-                        <h3 title="<?= htmlspecialchars($movie['title']) ?>">
-                            <?= htmlspecialchars($movie['title']) ?>
-                        </h3>
-                        <p class="movie-info">
-                            <?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?>
-                        </p>
-                        <button class="btn">+ Watchlist</button>
+<section class="movies-wrapper">
+    <header class="header-title">🔥 Top 10 on MovieVerse this week</header>
+    <div class="scroll-container">
+        <?php foreach ($trendingMovies as $movie): ?>
+            <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link" style="text-decoration: none; border: none; outline: none;">
+                <div class="movie-card">
+                    <img src="<?= $movie['poster_path'] ? 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'] : 'images/image_not_found.jpg' ?>" 
+                         alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+                    <h3 title="<?= htmlspecialchars($movie['title']) ?>">
+                        <?= htmlspecialchars($movie['title']) ?>
+                    </h3>
+                    <p class="movie-info">
+                        <?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?>
+                    </p>
+                    <div class="button-container">
+                        <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
+                        <span class="like-icon" onclick="toggleLike(<?= $movie['id'] ?>, this)">♡</span>
                     </div>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </section>
+                </div>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</section>
 
     <!-- Movie Request CTA Section -->
 <section class="request-section">

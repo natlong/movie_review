@@ -327,18 +327,69 @@
         return $results;
     }
     
+    // Profile picture functions
     
-    
+    /**
+     * Update user's profile picture in the users table
+     * 
+     * @param int $userId The user ID
+     * @param string $path Path to the profile picture
+     * @return bool True if successful, false otherwise
+     */
+    function updateUserProfilePic($userId, $path) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("UPDATE users SET profile_pic = ? WHERE user_id = ?");
+        $stmt->bind_param("si", $path, $userId);
+        $result = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $result;
+    }
+
+    /**
+     * Get user's profile information including profile picture
+     * 
+     * @param int $userId The user ID
+     * @return array|null User data or null if not found
+     */
+    function getUserProfile($userId) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("SELECT username, email, profile_pic, role, created_at FROM users WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $userData = $result->fetch_assoc();
+        } else {
+            $userData = null;
+        }
+        
+        $stmt->close();
+        $conn->close();
+        return $userData;
+    }
+
+    /**
+     * Update user's profile picture in the users table
+     * This function is designed to be used with the profile picture upload feature
+     * 
+     * @param int $userId The user ID
+     * @param string $picturePath Path to the profile picture
+     * @return bool True if successful, false otherwise
+     */
+    function updateProfilePicture($userId, $picturePath) {
+        return updateUserProfilePic($userId, $picturePath);
+    }
+
+    function updateUserPassword($user_id, $new_password) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
+        $stmt->bind_param("si", $new_password, $user_id);
+        $result = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $result;
+    }
     
 ?>
-
-
-
-
-
-
-
-
-
-
-

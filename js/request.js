@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (form) {
     form.addEventListener("submit", function() {
       const input = document.getElementById("request-input");
-      alert(`Request for "${input.value}" received!`);
+      //alert(`Request for "${input.value}" received!`);
     });
   }
 });
