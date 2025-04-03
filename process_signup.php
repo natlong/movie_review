@@ -45,6 +45,14 @@
             $success = false;
         }
     }
+    if($success){
+        $result = getUserDetailsByEmail($email);
+        
+        if ($result->num_rows > 0) {
+            $errorMsg .= "Email already exists.";
+            $success = false;
+        }
+    }
     
     if ($success && $_SERVER["REQUEST_METHOD"] == "POST"){
         // Hash password securely
