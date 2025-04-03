@@ -29,7 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
             card.innerHTML = `
               <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
               <h3>${movie.title}</h3>
-              <p class="movie-info">${movie.release_date} • ⭐ ${movie.vote_average.toFixed(1)}</p>
+              <p class="movie-info">${movie.release_date} • ⭐ ${movie.vote_average.toFixed(2)}</p>
+              <div class="button-container">
+                <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
+                <span class="like-icon" onclick="toggleLike(<?= $movie['id'] ?>, this)">♡</span>
+              </div>
             `;
             movieGrid.appendChild(card);
           });

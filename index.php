@@ -25,7 +25,7 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
                 <img src="https://image.tmdb.org/t/p/original<?= $movie['backdrop_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>">
                 <div class="spotlight-info">
                     <h2><?= htmlspecialchars($movie['title']) ?></h2>
-                    <p><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 1) ?></p>
+                    <p><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
                     <a href="movie_info.php?id=<?= $movie['id'] ?>" class="btn">View Details</a>
                 </div>
             </div>
@@ -40,7 +40,7 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
     <header class="header-title">🔥 Top 10 on MovieVerse this week</header>
     <div class="scroll-container">
         <?php foreach ($trendingMovies as $movie): ?>
-            <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link" style="text-decoration: none; border: none; outline: none;">
+            <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link">
                 <div class="movie-card">
                     <img src="<?= $movie['poster_path'] ? 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'] : 'images/image_not_found.jpg' ?>" 
                          alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">

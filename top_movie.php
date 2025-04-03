@@ -32,7 +32,7 @@ $topMovies = fetchTopRatedMovies(250);
 
         <div class="movie-details">
           <h3><?= $index + 1 ?>. <?= htmlspecialchars($movie['title']) ?></h3>
-          <p class="meta">📅 <?= $movie['release_date'] ?> &nbsp; ⭐ <?= number_format($movie['vote_average'], 1) ?></p>
+          <p class="meta">📅 <?= $movie['release_date'] ?> &nbsp; ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
           <a href="movie_info.php?id=<?= $movie['id'] ?>" class="btn">View Details</a>
         </div>
       </div>
