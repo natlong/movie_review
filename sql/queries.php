@@ -77,6 +77,60 @@
         
     }
 
+    function getTopGenresFromWatchlist($user_id, $limit = 3) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $genreCount = [];
+    
+        // 1. Fetch movie_ids from user's watchlist (assuming you have a DB function)
+        $watchlist = getMovieFromWatchListByUserId($user_id); // array of TMDB movie IDs
+    
+        foreach ($watchlist as $entry) {
+            $movie_id = $entry['movie_id'];
+            $url = "https://api.themoviedb.org/3/movie/$movie_id?api_key=$apiKey";
+            $response = file_get_contents($url);
+            $data = json_decode($response, true);
+    
+            if (!empty($data['genres'])) {
+                foreach ($data['genres'] as $genre) {
+                    $genreId = $genre['id'];
+                    $genreCount[$genreId] = ($genreCount[$genreId] ?? 0) + 1;
+                }
+            }
+        }
+    
+        // Sort genres by frequency
+        arsort($genreCount);
+    
+        // Return the top N genre IDs
+        return array_slice(array_keys($genreCount), 0, $limit);
+    }
+
+    function getTopMoviesByGenresExcluding($genre_ids = [], $exclude_ids = [], $limit = 10) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $uniqueMovies = [];
+    
+        foreach ($genre_ids as $genre_id) {
+            $url = "https://api.themoviedb.org/3/discover/movie?api_key=$apiKey&with_genres=$genre_id&sort_by=popularity.desc";
+            $response = file_get_contents($url);
+            $data = json_decode($response, true);
+    
+            if (!empty($data['results'])) {
+                foreach ($data['results'] as $movie) {
+                    if (in_array($movie['id'], $exclude_ids)) {
+                        continue;
+                    }
+                    $uniqueMovies[$movie['id']] = $movie;
+                }
+            }
+    
+            if (count($uniqueMovies) >= $limit) {
+                break;
+            }
+        }
+    
+        return array_slice(array_values($uniqueMovies), 0, $limit);
+    }    
+
     //Review Details Queries
     function getAllReviews(){
         $conn = connectToDB();
@@ -154,7 +208,7 @@
 
     function getMovieFromWatchListByUserId($user_id){
         $conn = connectToDB();
-        $stmt = $conn->prepare("SELECT movie_id, created_at FROM watchlist WHERE user_id = ?");
+        $stmt = $conn->prepare("SELECT movie_id FROM watchlist WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -166,7 +220,7 @@
     
         $stmt->close();
         $conn->close();
-        return $movies;  // ✅ Ensure you're returning an array
+        return $movies;  // 
     }
     
     

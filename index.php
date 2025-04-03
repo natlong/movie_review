@@ -1,5 +1,6 @@
 <?php
 session_start();
+$user_id = $_SESSION['user_id'] ?? null;
 require_once 'sql/queries.php';
 $trendingMovies = getTrendingMovies(10);
 $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as spotlight
@@ -17,6 +18,17 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
 </head>
 <body>
     <?php include 'inc/nav.inc.php'; ?>
+    <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    if (isset($_GET['message']) && $_GET['message'] === 'already_logged_in') {
+        echo "<p class='alert'>You're already logged in!</p>";
+    }
+    
+    ?>
+
 
     <!-- Spotlight Section -->
     <section id="featured-spotlight" class="spotlight-wrapper">
@@ -59,6 +71,37 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
         <?php endforeach; ?>
     </div>
 </section>
+    <?php if ($user_id != null): ?>
+    <?php
+        $watchlistMovieIds = getMovieFromWatchListByUserId($user_id);
+        $topGenres = getTopGenresFromWatchlist($user_id);
+        $recommendedMovies = getTopMoviesByGenresExcluding($topGenres, $watchlistMovieIds, 10);
+    ?>
+
+    <?php if (!empty($recommendedMovies)): ?>
+        <section class="recommended-container">
+        <header class="header-title">🎯 Recommended for You</header>
+        <div class="scroll-container">
+            <?php foreach ($recommendedMovies as $movie): ?>
+            <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link">
+                <div class="movie-card">
+                <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+                <h3><?= htmlspecialchars($movie['title']) ?></h3>
+                <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
+                <button class="btn">+ Watchlist</button>
+                </div>
+            </a>
+            <?php endforeach; ?>
+        </div>
+        </section>
+
+    <?php else: ?>
+        <p style="text-align:center; color:#aaa;">No personalized recommendations yet. Add movies to your watchlist to get started!</p>
+    <?php endif; ?>
+<?php endif; ?>
+
+
+
 
     <!-- Movie Request CTA Section -->
 <section class="request-section">

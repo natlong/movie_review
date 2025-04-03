@@ -2590,6 +2590,10 @@ nav.transparent {
 
 .review-scroll-area::-webkit-scrollbar {
   width: 8px;
+html, body {
+  height: auto !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
 .review-scroll-area::-webkit-scrollbar-thumb {
@@ -2617,11 +2621,18 @@ nav a.nav-link,
 nav a.nav-link:visited {
   color: white;
   text-decoration: none;
+.recommended-section {
+  display: block;
+  overflow: visible;
+  height: auto;
 }
 
 nav a.nav-link:hover {
   text-decoration: underline;
   color: #ffc107; /* Optional: highlight on hover */
+.movie-card {
+  min-height: 400px;
+  height: auto;
 }
 
 
