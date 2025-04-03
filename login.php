@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (isset($_SESSION['user_id'])) {
+    // User is already logged in, redirect them away
+    header("Location: index.php?message=already_logged_in");
+    exit();
+}
 ?>
 
 <head>
