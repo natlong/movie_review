@@ -2548,7 +2548,12 @@ nav.transparent {
 
 .dropdown-menu .dropdown-item {
   color: white;
+.genre-warning {
+  color: #ff4c4c; /* bright red */
+  text-align: center;
   font-weight: 500;
+  margin-top: 20px;
+  white-space: nowrap; /* force it to stay on one line */
 }
 
 .dropdown-menu .dropdown-item:hover {

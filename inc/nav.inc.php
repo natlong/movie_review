@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
   </a>
   
   <a href="top_movie.php" class="nav-link">🏆 Top 250</a>
-  <a href="category.php" class="nav-link">🎥 Category</a>
+  <a href="category.php" class="nav-link">🎥 Genre</a>
 
   <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
     <a href="insert.php" class="nav-link">➕ Insert Movie</a>
