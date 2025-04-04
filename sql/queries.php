@@ -348,7 +348,7 @@
         $results = [];
     
         // TMDb API search
-        $apiKey = 'YOUR_API_KEY';
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
         $url = "https://api.themoviedb.org/3/search/movie?api_key={$apiKey}&query=" . urlencode($query);
         $apiResponse = file_get_contents($url);
         $data = json_decode($apiResponse, true);

@@ -196,6 +196,33 @@ function addToWatchlist(movieId) {
   });
 }
 
+function addToLikes(event, movieId, element) {
+  event.stopPropagation();
+  console.log("Clicked element:", element);
+  fetch('add_like.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `movie_id=${movieId}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("✅ Like response:", data);
+
+    if(data.success){
+    element.textContent = data.liked ? '❤️' : '♡';
+    }
+    showPopup(data.message, data.success?'success': 'error');
+  })
+  .catch(()=>{
+    console.error("❌ Like error:", err);
+
+    showPopup("Something went wrong while liking the movie.", "error");
+
+  });
+}
+
 function showPopup(message, type) {
   const popup = document.createElement('div');
   popup.className = `watchlist-popup ${type}`;
