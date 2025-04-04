@@ -4,6 +4,7 @@ $user_id = $_SESSION['user_id'] ?? null;
 require_once 'sql/queries.php';
 $trendingMovies = getTrendingMovies(10);
 $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as spotlight
+$likedMovies = getAllMoviesFromLikedMoviesByUserId($user_id) ->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -65,7 +66,7 @@ $featuredMovies = array_slice($trendingMovies, 0, 4); // Use top 4 trending as s
                 </p>
                 <div class="button-container">
                     <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
-                    <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)">♡</span>
+                    <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
                 </div>
             </div>
         <?php endforeach; ?>

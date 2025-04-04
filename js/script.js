@@ -306,13 +306,13 @@ function addToLikes(event, movieId, element) {
       })
   .then(res => res.json())
   .then(data => {
-    console.log(data);
     if(data.success){
     element.textContent = data.liked ? '❤️' : '♡';
     }
     showPopup(data.message, data.success?'success': 'error');
   })
   .catch(()=>{
+    console.log("Error", data);
     showPopup("Something went wrong while liking the movie.", "error");
 
   });

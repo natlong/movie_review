@@ -28,14 +28,17 @@ $movie = getAllMoviesByMovieId($movie_id);
 if(!$movie){
     $tmdbData = fetchMovieDetails($movie_id);
     if ($tmdbData) {
-        $movie = [
-            'movie_title' => $tmdbData['title'],
-            'movie_description' => $tmdbData['overview'],
-            'genre' => $tmdbData['genres'],
-            'ratings' =>$tmdbData['rating']
-
-        ];
-        insertMovie($movie_id, $movie['movie_title'], $movie['$movie_description'], $movie['$genre'], $movie['$ratings']);
+        insertMovie($movie_id, 
+                    $tmdbData['title'], 
+                    $tmdbData['$overview'], 
+                    $tmdbData['$genres'], 
+                    $tmdbData['$rating']
+                );
+        if (!insertMovie(...)) {
+            echo json_encode(['success' => false, 'message' => 'Error inserting movie into DB.']);
+            exit;
+        }
+                
     } else {
         echo json_encode(['success' => false, 'message' => 'Failed to fetch movie details.']);
         exit;
