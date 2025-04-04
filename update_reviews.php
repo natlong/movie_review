@@ -1,5 +1,4 @@
 <?php
-// ✅ Debugging lines added:
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -24,24 +23,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // ✅ Validate getReviewById result
-    $result = getReviewById($reviewId);
-    if (!is_array($result)) {
-        echo json_encode(['status' => 'error', 'message' => 'getReviewById failed or returned invalid data']);
+    $existingReview = getReviewById($reviewId);
+    if (!$existingReview || $existingReview['user_id'] != $userId) {
+        echo json_encode(['status' => 'error', 'message' => 'Review not found or unauthorized']);
         exit;
     }
 
-    if (!isset($result['user_id']) || $result['user_id'] != $userId) {
-        echo json_encode(['status' => 'error', 'message' => 'Review not found or access denied']);
-        exit;
-    }
+    $updated = updateReview($reviewId, $reviewText, $rating);
 
-    $success = updateReview($reviewId, $reviewText, $rating);
-
-    if ($success) {
-        echo json_encode(['status' => 'success', 'message' => 'Review updated']);
+    if ($updated) {
+        echo json_encode([
+            'status' => 'success',
+            'message' => '✅ Review updated.',
+            'updated_text' => nl2br(htmlspecialchars($reviewText)),
+            'updated_rating' => number_format($rating, 1)
+        ]);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to update review']);
+        echo json_encode(['status' => 'error', 'message' => '❌ Failed to update review.']);
     }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);

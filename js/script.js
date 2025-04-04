@@ -197,37 +197,39 @@ function addToWatchlist(movieId) {
 }
 
 function addToLikes(event, movieId, element) {
-  try {
-    event.stopPropagation();
-    console.log("🔥 Sending like for movie ID:", movieId);
+  event.stopPropagation();
 
-    fetch('add_like.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: `movie_id=${movieId}`
-    })
-    .then(res => {
-      console.log("📦 Raw response:", res);
-      return res.json();
-    })
-    .then(data => {
-      console.log("✅ Response JSON:", data);
-      if (data.success) {
-        element.textContent = data.liked ? '❤️' : '♡';
-      }
-      showPopup(data.message, data.success ? 'success' : 'error');
-    })
-    .catch((fetchError) => {
-      console.error("❌ Fetch failed inside then():", fetchError);
-      showPopup("Something went wrong while liking the movie.", "error");
-    });
+  fetch('add_like.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `movie_id=${movieId}`
+  })
+  .then(async (res) => {
+    const contentType = res.headers.get("content-type") || "";
+    const text = await res.text(); // always read body
 
-  } catch (jsError) {
-    console.error("❌ JS Error outside fetch:", jsError);
-    showPopup("Unexpected JavaScript error.", "error");
-  }
+    if (!contentType.includes("application/json")) {
+      throw new Error("Non-JSON response: " + text);
+    }
+
+    if (!text) {
+      throw new Error("Empty response from server.");
+    }
+
+    return JSON.parse(text);
+  })
+  .then(data => {
+    if (data.success) {
+      element.textContent = data.liked ? '❤️' : '♡';
+    }
+    showPopup(data.message, data.success ? 'success' : 'error');
+  })
+  .catch(err => {
+    console.error("❌ Like request error:", err);
+    showPopup("Like request failed. " + err.message, "error");
+  });
 }
 
 
@@ -291,3 +293,104 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Show the edit form when Edit button is clicked
+  document.querySelectorAll('.edit-review-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const reviewId = button.dataset.reviewId;
+      const form = document.getElementById(`edit-form-${reviewId}`);
+      if (form) form.style.display = 'block';
+    });
+  });
+
+  // Hide the edit form when Cancel button is clicked
+  document.querySelectorAll('.cancel-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const form = button.closest('.edit-review-form');
+      if (form) form.style.display = 'none';
+    });
+  });
+
+  // Handle review delete with confirmation and AJAX
+  document.querySelectorAll('.delete-review-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const reviewId = button.dataset.reviewId;
+      if (confirm("Are you sure you want to delete this review?")) {
+        fetch('delete_review.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: `review_id=${reviewId}`
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            showPopup("✅ Review deleted.", "success");
+            const reviewBox = document.querySelector(`.review-box[data-review-id="${reviewId}"]`);
+            if (reviewBox) reviewBox.remove();
+          } else {
+            showPopup("❌ " + data.message, "error");
+          }
+        })
+        .catch(err => {
+          console.error("Delete error:", err);
+          showPopup("❌ Error deleting review.", "error");
+        });
+      }
+    });
+  });
+
+  // Handle edit review form submission via AJAX
+  document.querySelectorAll('.edit-review-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const reviewId = form.dataset.reviewId;
+      const formData = new FormData(form);
+      formData.append('review_id', reviewId);
+
+      const resultDiv = form.querySelector(".edit-result");
+
+      try {
+        const response = await fetch('edit_review.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        resultDiv.textContent = data.message;
+        resultDiv.style.color = data.status === 'success' ? 'lightgreen' : 'red';
+
+        if (data.status === 'success') {
+          const textDisplay = document.getElementById(`review-text-${reviewId}`);
+          if (textDisplay) {
+            const newText = formData.get("review_text");
+            textDisplay.innerHTML = newText.replace(/\n/g, "<br>");
+          }
+          form.style.display = "none";
+        }
+      } catch (err) {
+        resultDiv.textContent = "❌ Error saving review.";
+        resultDiv.style.color = "red";
+        console.error(err);
+      }
+    });
+  });
+});
+
+// Popup function to display success or error messages
+function showPopup(message, type) {
+  const popup = document.createElement('div');
+  popup.className = `watchlist-popup ${type}`;
+  popup.textContent = message;
+  document.body.appendChild(popup);
+
+  setTimeout(() => popup.remove(), 3000);
+}

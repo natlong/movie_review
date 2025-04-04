@@ -73,6 +73,9 @@ if (!empty($profile_path) && file_exists($profile_path)) {
 $watchlist = getMovieFromWatchListByUserId($userId);
 $hasWatchlist = is_array($watchlist) && count($watchlist) > 0;
 
+$likeList = getMovieListFromLikedListByUserId($userId);
+$hasLikedList = is_array($likeList) && count($likeList) > 0;
+
 $reviews = getReviewsByUserId($userId);
 $hasReviews = is_array($reviews) && count($reviews) > 0;
 ?>
@@ -84,7 +87,7 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Profile Page</title>
   <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
-  <script src="script.js?v=<?= time() ?>" defer></script>
+  <script src="js/script.js?v=<?= time() ?>" defer></script>
   <?php include 'inc/head.inc.php'; ?>
 </head>
 <body>
@@ -119,7 +122,6 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
       </div>
     </div>
 
-    <!-- Watchlist and Reviews (unchanged) -->
     <div class="watchlist-container">
       <h3>Your Watchlist</h3>
       <?php if (!$hasWatchlist): ?>
@@ -130,10 +132,8 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
             <?php
               $movieId = $item['movie_id'];
               if (!$movieId) continue;
-
               $movieDetails = fetchMovieDetails($movieId);
               if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
-
               $data = $movieDetails['movieData'];
             ?>
             <a href="movie_info.php?id=<?= $movieId ?>" class="movie-link">
@@ -141,7 +141,32 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
                 <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
                 <h3><?= htmlspecialchars($data['title']) ?></h3>
                 <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
-                <button class="btn">+ Watchlist</button>
+              </div>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+    </div>
+
+    <div class="likes-container">
+      <h3>Movies you Liked</h3>
+      <?php if (!$hasLikedList): ?>
+        <p>No movies liked yet.</p>
+      <?php else: ?>
+        <div class="scroll-container" id="movies-scroll">
+          <?php foreach ($likeList as $item): ?>
+            <?php
+              $movieId = $item['movie_id'];
+              if (!$movieId) continue;
+              $movieDetails = fetchMovieDetails($movieId);
+              if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
+              $data = $movieDetails['movieData'];
+            ?>
+            <a href="movie_info.php?id=<?= $movieId ?>" class="movie-link">
+              <div class="movie-card">
+                <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
+                <h3><?= htmlspecialchars($data['title']) ?></h3>
+                <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
               </div>
             </a>
           <?php endforeach; ?>
