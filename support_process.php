@@ -19,7 +19,7 @@ function sanitize_input($data) {
 
 // Ensure the user is logged in and that user_id, email, and username are available.
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['email']) || !isset($_SESSION['username'])) {
-    $errorMsg = "User must be logged in to submit a support ticket.";
+    $errorMsg = "User must be logged in to submit a support ticket. Please login or email support@movieverse.com";
     $success = false;
 }
 

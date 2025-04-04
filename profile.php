@@ -14,40 +14,33 @@ $userId = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 $email = $_SESSION['email'];
 
-// Handle profile picture upload
 $upload_message = '';
-$profile_image = 'images/default-profile.png'; // Default image
+$profile_image = 'images/default-profile.png';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_picture'])) {
     $upload_dir = 'uploads/profile_pics/';
-    
-    // Create directory if it doesn't exist
+
     if (!file_exists($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
-    
+
     $file = $_FILES['profile_picture'];
     $filename = $file['name'];
     $tmp_name = $file['tmp_name'];
     $file_error = $file['error'];
     $file_size = $file['size'];
-    
-    // Get file extension
+
     $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-    
-    // Generate a unique filename
+
     $new_filename = $userId . '_' . time() . '.' . $file_ext;
     $target_file = $upload_dir . $new_filename;
-    
-    // Validate file
+
     if ($file_error === 0) {
-        if ($file_size <= 5000000) { // 5MB max
+        if ($file_size <= 5000000) {
             if (in_array($file_ext, $allowed_extensions)) {
-                // Move uploaded file
                 if (move_uploaded_file($tmp_name, $target_file)) {
-                    // Update user's profile picture in database
-                    if (updateProfilePicture($userId, $target_file)) {
+                    if (updateUserProfilePic($userId, $target_file)) {
                         $_SESSION['profile_pic'] = $target_file;
                         $upload_message = "Profile picture updated successfully!";
                     } else {
@@ -67,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_picture'])) 
     }
 }
 
-// Get user's profile picture
 $user_profile = getUserProfile($userId);
 if ($user_profile && isset($user_profile['profile_pic']) && !empty($user_profile['profile_pic'])) {
     $profile_image = $user_profile['profile_pic'];
@@ -87,13 +79,13 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Profile Page</title>
   <link rel="stylesheet" href="css/style.css?v=<?= time() ?>">
+  <script src="script.js?v=<?= time() ?>" defer></script>
   <?php include 'inc/head.inc.php'; ?>
 </head>
 <body>
   <?php include 'inc/nav.inc.php'; ?>
 
   <div class="profile-container">
-    <!-- Profile Info -->
     <div class="profile-details">
       <div class="profile-image-container">
         <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" class="profile-image">
@@ -101,27 +93,24 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
       <div class="profile-info">
         <h2><?= htmlspecialchars($username) ?></h2>
         <p>Email: <?= htmlspecialchars($email) ?></p>
-        
-        <!-- Profile Picture Upload Form -->
+
         <form class="profile-form" action="<?= $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
           <input type="file" name="profile_picture" accept="image/*">
           <button type="submit" class="btn">Upload Profile Picture</button>
         </form>
-        
+
         <?php if (!empty($upload_message)): ?>
           <div class="upload-status <?= strpos($upload_message, 'successfully') !== false ? 'success' : 'error' ?>">
             <?= $upload_message ?>
           </div>
         <?php endif; ?>
-        
+
         <a href="change_password.php" class="btn">Change Password</a>
       </div>
     </div>
 
-    <!-- Watchlist Section -->
     <div class="watchlist-container">
       <h3>Your Watchlist</h3>
-
       <?php if (!$hasWatchlist): ?>
         <p>No watchlist yet.</p>
       <?php else: ?>
@@ -148,38 +137,49 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
         </div>
       <?php endif; ?>
     </div>
-<!-- Reviews Section -->
-<div class="reviews-container">
-  <h3>Your Movie Reviews</h3>
 
-  <?php if (!$hasReviews): ?>
-    <p>No reviews yet. Go write one!</p>
-  <?php else: ?>
-    <div class="user-reviews-list">
-      <?php foreach ($reviews as $review): ?>
-        <?php
-          $movieDetails = fetchMovieDetails($review['movie_id']);
-          $movieData = $movieDetails['movieData'] ?? null;
-          $movieTitle = $movieData['title'] ?? 'Unknown Movie';
-          $movieRating = isset($review['rating']) ? number_format($review['rating'], 1) : '0.0';
-          $reviewText = nl2br(htmlspecialchars($review['review'] ?? ''));
-          $reviewDate = isset($review['created_at']) ? date('F j, Y', strtotime($review['created_at'])) : 'Unknown';
-        ?>
-        <div class="review-box">
-          <div class="review-header">
-            <h4><?= htmlspecialchars($movieTitle) ?></h4>
-            <span class="review-rating">⭐ <?= $movieRating ?></span>
-          </div>
-          <p class="review-text"><?= $reviewText ?></p>
-          <div class="review-footer">
-            <small>Posted on <?= $reviewDate ?></small>
-          </div>
+    <div class="reviews-container">
+      <h3>Your Movie Reviews</h3>
+      <?php if (!$hasReviews): ?>
+        <p>No reviews yet. Go write one!</p>
+      <?php else: ?>
+        <div class="user-reviews-list">
+          <?php foreach ($reviews as $review): ?>
+            <?php
+              $movieDetails = fetchMovieDetails($review['movie_id']);
+              $movieData = $movieDetails['movieData'] ?? null;
+              $movieTitle = $movieData['title'] ?? 'Unknown Movie';
+              $movieRating = isset($review['rating']) ? number_format($review['rating'], 1) : '0.0';
+              $reviewText = htmlspecialchars($review['review'] ?? '');
+              $reviewDate = isset($review['created_at']) ? date('F j, Y', strtotime($review['created_at'])) : 'Unknown';
+            ?>
+            <div class="review-box" data-review-id="<?= $review['review_id'] ?>">
+              <div class="review-header">
+                <h4><?= htmlspecialchars($movieTitle) ?></h4>
+                <span class="review-rating">⭐ <span class="rating-display"><?= $movieRating ?></span></span>
+              </div>
+              <p class="review-text" id="review-text-<?= $review['review_id'] ?>"><?= nl2br($reviewText) ?></p>
+              <div class="review-footer">
+                <small>Posted on <?= $reviewDate ?></small>
+                <br><br>
+                <button class="btn edit-review-btn" data-review-id="<?= $review['review_id'] ?>">✏️ Edit</button>
+                <button type="button" class="btn delete-review-btn" data-review-id="<?= $review['review_id'] ?>">🗑️ Delete</button>
+
+              </div>
+              <form class="edit-review-form" id="edit-form-<?= $review['review_id'] ?>" data-review-id="<?= $review['review_id'] ?>" style="display: none;">
+                <textarea name="review_text" required><?= htmlspecialchars($review['review']) ?></textarea>
+                <input type="number" name="rating" min="0" max="5" step="0.1" value="<?= $movieRating ?>">
+                <input type="hidden" name="review_id" value="<?= $review['review_id'] ?>">
+                <button type="submit" class="btn">💾 Save</button>
+                <button type="button" class="btn cancel-btn">❌ Cancel</button>
+                <div class="edit-result"></div>
+              </form>
+            </div>
+          <?php endforeach; ?>
         </div>
-      <?php endforeach; ?>
+      <?php endif; ?>
     </div>
-  <?php endif; ?>
-</div>
-
+  </div>
 
   <?php include 'inc/footer.inc.php'; ?>
 </body>

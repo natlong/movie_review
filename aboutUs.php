@@ -50,27 +50,27 @@ session_start();
         <div class="team-member">
           <img src="images/xg.jpg" alt="Tan Xian Guang">
           <h3>Tan Xian Guang</h3>
-          <p>Lead Developer</p>
+          <p>Backend Developer</p>
         </div>
         <div class="team-member">
           <img src="images/zining.jpg" alt="Wang Zining">
           <h3>Wang Zining</h3>
-          <p>Frontend Developer</p>
+          <p>Backend Developer</p>
         </div>
         <div class="team-member">
           <img src="images/sri.jpg" alt="Ramasubramanian Srinithi">
           <h3>Ramasubramanian Srinithi</h3>
-          <p>UI/UX Designer</p>
+          <p>Frontend Developer</p>
         </div>
         <div class="team-member">
           <img src="images/natalie.jpg" alt="Long Hui Ying Natalie">
           <h3>Long Hui Ying Natalie</h3>
-          <p>Content Writer</p>
+          <p>Backend Developer</p>
         </div>
         <div class="team-member">
           <img src="images/wei wei.jpg" alt="Tay Wei Lin">
           <h3>Tay Wei Lin</h3>
-          <p>Marketing Lead</p>
+          <p>Frontend Developer</p>
         </div>
       </div>
     </section>

@@ -1,5 +1,10 @@
 <?php
 session_start();
+if (isset($_SESSION['user_id'])) {
+    // User is already logged in, redirect them away
+    header("Location: index.php?message=already_logged_in");
+    exit();
+}
 ?>
 
 <head>
@@ -33,7 +38,8 @@ session_start();
             <label for="login-password">Password</label>
             <input type="password" id="login-password" name="pwd" placeholder="Enter your password" required>
         </div>
-
+        <a href="forget_password.php" class="forget-password">Forget Password?</a>
+        <br>
         <button type="submit" class="submit-btn">Login</button>
         </form>
 

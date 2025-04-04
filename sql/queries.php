@@ -72,10 +72,73 @@
             return $result->fetch_assoc();  // Returns movie data if found
         } else {
             return null;  // Return null if no movie found
-        }
-
-        
+        }        
     }
+
+    function insertMovie($movie_id, $movie_title, $movie_description, $genre, $ratings){
+        $conn = connectToDB();
+        $stmt = $conn->prepare("INSERT INTO movie (movie_id, movie_title, movie_description, genre, ratings) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("issss", $movie_id, $movie_title, $movie_description, $genre, $ratings);
+        if($stmt->execute()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function getTopGenresFromWatchlist($user_id, $limit = 3) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $genreCount = [];
+    
+        // 1. Fetch movie_ids from user's watchlist (assuming you have a DB function)
+        $watchlist = getMovieFromWatchListByUserId($user_id); // array of TMDB movie IDs
+    
+        foreach ($watchlist as $entry) {
+            $movie_id = $entry['movie_id'];
+            $url = "https://api.themoviedb.org/3/movie/$movie_id?api_key=$apiKey";
+            $response = file_get_contents($url);
+            $data = json_decode($response, true);
+    
+            if (!empty($data['genres'])) {
+                foreach ($data['genres'] as $genre) {
+                    $genreId = $genre['id'];
+                    $genreCount[$genreId] = ($genreCount[$genreId] ?? 0) + 1;
+                }
+            }
+        }
+    
+        // Sort genres by frequency
+        arsort($genreCount);
+    
+        // Return the top N genre IDs
+        return array_slice(array_keys($genreCount), 0, $limit);
+    }
+
+    function getTopMoviesByGenresExcluding($genre_ids = [], $exclude_ids = [], $limit = 10) {
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $uniqueMovies = [];
+    
+        foreach ($genre_ids as $genre_id) {
+            $url = "https://api.themoviedb.org/3/discover/movie?api_key=$apiKey&with_genres=$genre_id&sort_by=popularity.desc";
+            $response = file_get_contents($url);
+            $data = json_decode($response, true);
+    
+            if (!empty($data['results'])) {
+                foreach ($data['results'] as $movie) {
+                    if (in_array($movie['id'], $exclude_ids)) {
+                        continue;
+                    }
+                    $uniqueMovies[$movie['id']] = $movie;
+                }
+            }
+    
+            if (count($uniqueMovies) >= $limit) {
+                break;
+            }
+        }
+    
+        return array_slice(array_values($uniqueMovies), 0, $limit);
+    }    
 
     //Review Details Queries
     function getAllReviews(){
@@ -136,10 +199,12 @@
         $stmt->bind_param("i", $review_id);
         $stmt->execute();
         $result = $stmt->get_result();
+        $review = $result->fetch_assoc(); // ✅ convert to array
         $stmt->close();
         $conn->close();
-        return $result;
+        return $review;
     }
+    
 
     //Watchlist Queries
     function getAllMoviesFromWatchList(){
@@ -154,7 +219,7 @@
 
     function getMovieFromWatchListByUserId($user_id){
         $conn = connectToDB();
-        $stmt = $conn->prepare("SELECT movie_id, created_at FROM watchlist WHERE user_id = ?");
+        $stmt = $conn->prepare("SELECT movie_id FROM watchlist WHERE user_id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -166,7 +231,7 @@
     
         $stmt->close();
         $conn->close();
-        return $movies;  // ✅ Ensure you're returning an array
+        return $movies;  // 
     }
     
     
@@ -296,60 +361,36 @@
         // TMDb API search
         $apiKey = '0898e5d05464d2b33011428dac1eee0f';
         $url = "https://api.themoviedb.org/3/search/movie?api_key={$apiKey}&query=" . urlencode($query);
-        
-        // Fetch the API response
         $apiResponse = file_get_contents($url);
-        if ($apiResponse === false) {
-            error_log("TMDb API call failed for URL: $url");
-        }
-        
         $data = json_decode($apiResponse, true);
-        if (!$data) {
-            error_log("Failed to decode API response: " . $apiResponse);
-        }
-        
-        // Check if the API returned results
-        if ($data && isset($data['results']) && is_array($data['results'])) {
-            $results = array_slice($data['results'], 0, 10); // Limit API results to 10 entries
-        } else {
-            error_log("No API results found or unexpected API response structure: " . print_r($data, true));
+        if ($data && isset($data['results'])) {
+            $results = array_slice($data['results'], 0, 10); // Limit API results
         }
     
         // Local DB search
         $conn = connectToDB();
         if ($conn) {
             $stmt = $conn->prepare("SELECT * FROM movie WHERE movie_title LIKE CONCAT('%', ?, '%')");
-            if (!$stmt) {
-                error_log("DB Prepare error: " . $conn->error);
-            } else {
-                $stmt->bind_param("s", $query);
-                if (!$stmt->execute()) {
-                    error_log("DB Execute error: " . $stmt->error);
-                } else {
-                    $dbResult = $stmt->get_result();
-                    while ($row = $dbResult->fetch_assoc()) {
-                        // Append local DB results to the results array
-                        $results[] = [
-                            'id' => $row['movie_id'],
-                            'title' => $row['movie_title'],
-                            'release_date' => 'N/A',
-                            'vote_average' => 0,
-                            'poster_path' => $row['img_link'] // your local image path
-                        ];
-                    }
-                }
-                $stmt->close();
+            $stmt->bind_param("s", $query);
+            $stmt->execute();
+            $dbResult = $stmt->get_result();
+    
+            while ($row = $dbResult->fetch_assoc()) {
+                $results[] = [
+                    'id' => $row['movie_id'],
+                    'title' => $row['movie_title'],
+                    'release_date' => 'N/A',
+                    'vote_average' => 0,
+                    'poster_path' => $row['img_link'] // your local img
+                ];
             }
+    
+            $stmt->close();
             $conn->close();
-        } else {
-            error_log("DB connection failed.");
         }
     
         return $results;
     }
-    
-    
-    
     
     // Profile picture functions
     
@@ -415,5 +456,24 @@
         $conn->close();
         return $result;
     }
+
+
+    
+    function updateReview($reviewId, $newText, $newRating) {
+        $conn = connectToDB();
+        $stmt = $conn->prepare("UPDATE reviews SET review = ?, rating = ? WHERE review_id = ?"); // ✅ fix column name too!
+        $stmt->bind_param("sdi", $newText, $newRating, $reviewId);
+        $success = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $success;
+    }
+    
+
+
+
     
 ?>
+
+
+

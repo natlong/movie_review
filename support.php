@@ -52,7 +52,7 @@ session_start();
 <body>
   <header>
     <h1>Support & FAQs</h1>
-    <p>Find answers to common questions about MovieVerse.</p>
+    <p>Find answers to common questions about MovieVerse or drop us a question!</p>
   </header>
 
   <section class="faq-container">
@@ -67,7 +67,7 @@ session_start();
     <div class="faq-item">
       <button class="faq-question">How do I submit a movie review?<span class="plus">+</span></button>
       <div class="faq-answer">
-        <p>Once logged in, go to the movie page and click "Write a Review". Enter your rating and comments, then submit.</p>
+        <p>Once logged in, go to the movie page of the movie of your choice and click "Write a Review". Enter your rating and comments, then submit.</p>
       </div>
     </div>
 

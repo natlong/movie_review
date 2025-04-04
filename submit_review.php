@@ -19,6 +19,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($reviewText && $rating >= 1 && $rating <= 5) {
         $conn = connectToDB();
+
+        // If movie is not in the database, fetch from API and insert
+        $checkMovie = $conn->prepare("SELECT movie_id FROM movie WHERE movie_id = ?");
+        $checkMovie->bind_param("i", $movieId);
+        $checkMovie->execute();
+        $result = $checkMovie->get_result();
+
+        if ($result->num_rows === 0) {
+            // Movie not in DB, fetch from API
+            $response = fetchMovieDetails($movieId);
+            if ($response && isset($response['movieData'])) {
+                $movie = $response['movieData'];
+                $title = $movie['title'] ?? 'Untitled';
+                $desc = $movie['overview'] ?? 'No description.';
+                $genre = $movie['genres'] ?? 'Unknown';
+                $poster = $movie['poster'] ?? '';
+
+                $insertMovie = $conn->prepare("INSERT INTO movie (movie_id, movie_title, movie_description, genre, img_link) VALUES (?, ?, ?, ?, ?)");
+                $insertMovie->bind_param("issss", $movieId, $title, $desc, $genre, $poster);
+                $insertMovie->execute();
+                $insertMovie->close();
+            }
+        }
+        $checkMovie->close();
+
+        // Insert review
         $stmt = $conn->prepare("INSERT INTO reviews (user_id, movie_id, review, rating, created_at) VALUES (?, ?, ?, ?, NOW())");
         $stmt->bind_param("iisi", $userId, $movieId, $reviewText, $rating);
         if ($stmt->execute()) {

@@ -33,7 +33,9 @@ $result = $conn->query($sql);
         <label for="request-input" class="form-label">Movie Name</label>
         <input type="text" id="request-input" name="movie_name" class="form-control" placeholder="Enter movie name" required>
       </div>
+      <div style="display: flex; justify-content: center; margin-top: 15px;">
       <button type="submit" class="btn btn-primary">Send Request</button>
+      </div>
     </form>
   </section>
 

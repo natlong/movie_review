@@ -1,62 +1,42 @@
 <?php
 session_start();
+header('Content-Type: application/json');
+
 require_once 'sql/queries.php';
 
-header('Content-Type: application/json'); // JSON response only
-
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode([
-        "success" => false,
-        "message" => "Please log in to add to watchlist."
-    ]);
+    echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['movie_id'])) {
-    $userId = $_SESSION['user_id'];
-    $movieId = intval($_POST['movie_id']);
+$user_id = $_SESSION['user_id'];
+$movie_id = $_POST['movie_id'] ?? null;
 
-    $conn = connectToDB();
+if (!$movie_id) {
+    echo json_encode(['success' => false, 'message' => 'Invalid movie ID.']);
+    exit;
+}
 
-    // Check if already exists
-    $check = $conn->prepare("SELECT 1 FROM watchlist WHERE user_id = ? AND movie_id = ?");
-    $check->bind_param("ii", $userId, $movieId);
-    $check->execute();
-    $result = $check->get_result();
+// Get all movies already in the user's watchlist
+$existing = getMovieFromWatchListByUserId($user_id);
+$existingIds = array_column($existing, 'movie_id');
 
-    if ($result && $result->num_rows === 0) {
-        // Insert new
-        $insert = $conn->prepare("INSERT INTO watchlist (user_id, movie_id, created_at) VALUES (?, ?, NOW())");
-        $insert->bind_param("ii", $userId, $movieId);
+if (in_array($movie_id, $existingIds)) {
+    echo json_encode(['success' => false, 'message' => '⚠️ Movie already in your watchlist.']);
+    exit;
+}
 
-        if ($insert->execute()) {
-            echo json_encode([
-                "success" => true,
-                "message" => "✅ Movie added to your watchlist."
-            ]);
-        } else {
-            http_response_code(500);
-            echo json_encode([
-                "success" => false,
-                "message" => "❌ Failed to add movie. Try again later."
-            ]);
-        }
-        $insert->close();
-    } else {
-        echo json_encode([
-            "success" => false,
-            "message" => "⚠️ Movie already in your watchlist."
-        ]);
-    }
+$conn = connectToDB();
+$stmt = $conn->prepare("INSERT INTO watchlist (user_id, movie_id) VALUES (?, ?)");
+$stmt->bind_param("ii", $user_id, $movie_id);
+$success = $stmt->execute();
 
-    $check->close();
-    $conn->close();
+$stmt->close();
+$conn->close();
+
+if ($success) {
+    echo json_encode(['success' => true, 'message' => '✅ Movie added to watchlist!']);
 } else {
-    http_response_code(400);
-    echo json_encode([
-        "success" => false,
-        "message" => "Invalid request – movie ID missing."
-    ]);
+    echo json_encode(['success' => false, 'message' => '❌ Failed to add movie to watchlist.']);
 }
 ?>
