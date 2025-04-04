@@ -33,7 +33,7 @@ while ($row = $likedResult->fetch_assoc()) {
         echo "<p class='alert'>You're already logged in!</p>";
     }
     ?>
-
+<main class="index-main-container">
     <!-- Spotlight Section -->
     <section id="featured-spotlight" class="spotlight-wrapper">
         <?php foreach ($featuredMovies as $i => $movie): ?>
@@ -53,28 +53,28 @@ while ($row = $likedResult->fetch_assoc()) {
 
     <!-- Top 10 Movies -->
     <section class="movies-wrapper">
-    <header class="header-title">🔥 Top 10 on MovieVerse this week</header>
-    <div class="scroll-container">
-        <?php foreach ($trendingMovies as $movie): ?>
-            <div class="movie-card">
-                <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link" style="text-decoration: none; border: none; outline: none;">
-                    <img src="<?= $movie['poster_path'] ? 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'] : 'images/image_not_found.jpg' ?>" 
-                         alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
-                </a>
-                <h3 title="<?= htmlspecialchars($movie['title']) ?>">
-                    <?= htmlspecialchars($movie['title']) ?>
-                </h3>
-                <p class="movie-info">
-                    <?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?>
-                </p>
-                <div class="button-container">
-                    <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
-                    <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
+        <header class="header-title">🔥 Top 10 on MovieVerse this week</header>
+        <div class="scroll-container">
+            <?php foreach ($trendingMovies as $movie): ?>
+                <div class="movie-card">
+                    <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link" style="text-decoration: none; border: none; outline: none;">
+                        <img src="<?= $movie['poster_path'] ? 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'] : 'images/image_not_found.jpg' ?>" 
+                            alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+                    </a>
+                    <h3 title="<?= htmlspecialchars($movie['title']) ?>">
+                        <?= htmlspecialchars($movie['title']) ?>
+                    </h3>
+                    <p class="movie-info">
+                        <?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?>
+                    </p>
+                    <div class="button-container">
+                        <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
+                        <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
+                    </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
+            <?php endforeach; ?>
+        </div>
+    </section>
 
     <?php if ($user_id != null): ?>
     <?php
@@ -96,17 +96,18 @@ while ($row = $likedResult->fetch_assoc()) {
         <header class="header-title">🎯 Recommended for You</header>
         <div class="scroll-container">
             <?php foreach ($recommendedMovies as $movie): ?>
-            <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link">
-                <div class="movie-card">
-                <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+            <div class="movie-card">
+                <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link">
+                    <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+                </a>
                 <h3><?= htmlspecialchars($movie['title']) ?></h3>
                 <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
                 <div class="button-container">
                     <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
                     <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
                 </div>
-                </div>
-            </a>
+            </div>
+            
             <?php endforeach; ?>
         </div>
         </section>
@@ -116,37 +117,39 @@ while ($row = $likedResult->fetch_assoc()) {
 
     <?php if (!empty($becauseWatched)): ?>
         <section class="likes-container">
-        <header class="header-title">Because you watched <?= htmlspecialchars($lastLikedMovieTitle) ?></header>
+        <header class="header-title">Because you liked <?= htmlspecialchars($lastLikedMovieTitle) ?></header>
         <div class="scroll-container">
             <?php foreach ($becauseWatched as $movie): ?>
-            <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link">
+            
                 <div class="movie-card">
-                <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+                <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link">
+                    <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+                </a>
                 <h3><?= htmlspecialchars($movie['title']) ?></h3>
                 <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
                 <div class="button-container">
                     <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
+
                     <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
                 </div>
-                </div>
-            </a>
+            </div>
             <?php endforeach; ?>
         </div>
         </section>
-    <?php else: ?>
-        <p style="text-align:center; color:#aaa;">No personalized recommendations yet. Like Movies to get started!</p>
+        <?php else: ?>
+            <p style="text-align:center; color:#aaa;">No personalized recommendations yet. Like Movies to get started!</p>
+        <?php endif; ?>
     <?php endif; ?>
-<?php endif; ?>
 
 <!-- Movie Request CTA Section -->
-<section class="request-section">
-  <div class="request-inner">
-    <h2>🎥 Can’t find your movie?</h2>
-    <p>Send us a request and we’ll try to add it!</p>
-    <a href="request.php" class="btn">Request a Movie</a>
-  </div>
-</section>
-
+    <section class="request-section">
+    <div class="request-inner">
+        <h2>🎥 Can’t find your movie?</h2>
+        <p>Send us a request and we’ll try to add it!</p>
+        <a href="request.php" class="btn">Request a Movie</a>
+    </div>
+    </section>
+</main>
 <?php include 'inc/footer.inc.php'; ?>
 </body>
 </html>

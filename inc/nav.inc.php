@@ -29,7 +29,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="nav-controls">
       <!-- Sorting -->
       <div class="nav-sort">
-        <label for="sort-select">Sort By:</label>
+        <label for="sort-select" style="color: white;">Sort By:</label>
         <select id="sort-select" onchange="sortMovies()">
           <option value="rating-desc">Rating High to Low</option>
           <option value="rating-asc">Rating Low to High</option>
@@ -63,8 +63,8 @@ if (session_status() === PHP_SESSION_NONE) {
       <div id="auth-container">
         <?php if (!isset($_SESSION['user_id'])): ?>
           <div class="auth-links">
-            <a href="login.php" class="auth-link">Login</a>
-            <a href="signup.php" class="auth-link">Register</a>
+            <a href="login.php" class="auth-link" style="color: black;">Login</a>
+            <a href="signup.php" class="auth-link" style="color: black;">Register</a>
           </div>
         <?php else: ?>
           <!-- Profile Pic & Name -->

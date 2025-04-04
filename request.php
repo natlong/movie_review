@@ -24,7 +24,7 @@ $result = $conn->query($sql);
 </head>
 <body>
 
-<main class="container mt-5">
+<main class="container mt-5" style="max-width: 1200px;">
   <header class="page-header mb-4 text-center">
     <h2>Request a Movie</h2>
     <p>Don't see the movie you're looking for? Request it here, and we’ll add it to our collection!</p>

@@ -8,7 +8,8 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>Sign Up</title>
     <?php include 'inc/head.inc.php'; ?>
@@ -16,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
     <body>
         <?php include 'inc/nav.inc.php'; ?>
         <header class="header-title">
-            <h1>Sign Up</h1>
+            <h1 style="color: #ff5555";>Sign Up</h1>
         </header>
         <main class="auth-form-container">
         <?php if (isset($_GET['error'])): ?>
@@ -56,7 +57,7 @@ if (isset($_SESSION['user_id'])) {
             </div>
             <button type="submit" class="submit-btn">Sign Up</button>
             </form>
-            <p>Already have an account? <a href="login.php">Login</a></p>
+            <p>Already have an account? <a href="login.php" style="color: white";>Login</a></p>
         </main>
         <?php include 'inc/footer.inc.php'; ?>
     </body>

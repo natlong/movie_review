@@ -12,6 +12,14 @@ body {
   text-align: center !important;
 }
 
+main {
+  width: 100%;
+  display: block;
+  padding: 0;
+  margin: 0;
+  background-color: #000;
+}
+
 /* ========== NAVIGATION STYLES ========== */
 
 nav {
@@ -768,8 +776,7 @@ footer p a:hover {
 main {
   background-color: #111;
   color: white;
-  padding: 40px 20px;
-  max-width: 1200px;
+  /* padding: 40px 20px; */
   margin: 0 auto;
   text-align: center;
 }
@@ -2781,4 +2788,16 @@ nav a.nav-link:hover {
 #backToTopBtn.show {
   opacity: 1; /* Make button visible */
   transform: translateX(-50%) translateY(0); /* Smooth animation when shown */
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
