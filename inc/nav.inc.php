@@ -29,8 +29,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="nav-controls">
       <!-- Sorting -->
       <div class="nav-sort">
+        <label for="sort-select">Sort By:</label>
         <select id="sort-select" onchange="sortMovies()">
-          <option value="default">Sort By</option>
           <option value="rating-desc">Rating High to Low</option>
           <option value="rating-asc">Rating Low to High</option>
           <option value="year-desc">Year Newest First</option>

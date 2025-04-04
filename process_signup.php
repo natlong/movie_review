@@ -43,6 +43,9 @@
         if ($pwd !== $confirm_pwd) {
             $errorMsg .= "Passwords do not match.";
             $success = false;
+        }else if (strlen($pwd) < 8) {
+            $errorMsg .= "Password must be at least 8 characters long.<br>";
+            $success = false;
         }
     }
     
