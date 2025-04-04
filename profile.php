@@ -92,129 +92,133 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
 </head>
 <body>
   <?php include 'inc/nav.inc.php'; ?>
+  
 
-  <div class="profile-container">
-    <div class="profile-details">
-      <div class="profile-image-container">
-        <?php if (!empty($profile_image)): ?>
-          <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" class="profile-image">
-        <?php else: ?>
-          <div class="blank-profile-box">No Image</div>
-        <?php endif; ?>
+  <main>
+  <h1 class="visually-hidden">User Profile Page</h1>
+    <div class="user-details" style="width: 100%;display: block;padding: 0;margin: 0;">
+      <div class="profile-container">
+        <div class="profile-details">
+          <div class="profile-image-container">
+            <?php if (!empty($profile_image)): ?>
+              <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" class="profile-image">
+            <?php else: ?>
+              <div class="blank-profile-box">No Image</div>
+            <?php endif; ?>
+          </div>
+
+          <div class="profile-info">
+            <h2><?= htmlspecialchars($username) ?></h2>
+            <p>Email: <?= htmlspecialchars($email) ?></p>
+
+            <form aria-label="profile_picture_upload" class="profile-form" action="<?= $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
+              <input aria-label="profile_picture_upload" type="file" name="profile_picture" accept="image/*">
+              <button type="submit" class="btn">Upload Profile Picture</button>
+            </form>
+
+            <?php if (!empty($upload_message)): ?>
+              <div class="upload-status <?= strpos($upload_message, 'successfully') !== false ? 'success' : 'error' ?>">
+                <?= $upload_message ?>
+              </div>
+            <?php endif; ?>
+
+            <a href="change_password.php" class="btn">Change Password</a>
+          </div>
+        </div>
       </div>
 
-      <div class="profile-info">
-        <h2><?= htmlspecialchars($username) ?></h2>
-        <p>Email: <?= htmlspecialchars($email) ?></p>
-
-        <form class="profile-form" action="<?= $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
-          <input type="file" name="profile_picture" accept="image/*">
-          <button type="submit" class="btn">Upload Profile Picture</button>
-        </form>
-
-        <?php if (!empty($upload_message)): ?>
-          <div class="upload-status <?= strpos($upload_message, 'successfully') !== false ? 'success' : 'error' ?>">
-            <?= $upload_message ?>
+      <div class="watchlist-container">
+        <h3>Your Watchlist</h3>
+        <?php if (!$hasWatchlist): ?>
+          <p>No watchlist yet.</p>
+        <?php else: ?>
+          <div class="scroll-container" id="movies-scroll">
+            <?php foreach ($watchlist as $item): ?>
+              <?php
+                $movieId = $item['movie_id'];
+                if (!$movieId) continue;
+                $movieDetails = fetchMovieDetails($movieId);
+                if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
+                $data = $movieDetails['movieData'];
+              ?>
+              <div class="movie-card">
+                <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
+                <h3><?= htmlspecialchars($data['title']) ?></h3>
+                <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
+                <a href="movie_info.php?id=<?= $movie['id'] ?>" class="btn">View Details</a>
+              </div>
+            <?php endforeach; ?>
           </div>
         <?php endif; ?>
+      </div>
 
-        <a href="change_password.php" class="btn">Change Password</a>
+      <div class="likes-container">
+        <h3>Movies you Liked</h3>
+        <?php if (!$hasLikedList): ?>
+          <p>No movies liked yet.</p>
+        <?php else: ?>
+          <div class="scroll-container" id="movies-scroll">
+            <?php foreach ($likeList as $item): ?>
+              <?php
+                $movieId = $item['movie_id'];
+                if (!$movieId) continue;
+                $movieDetails = fetchMovieDetails($movieId);
+                if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
+                $data = $movieDetails['movieData'];
+              ?>
+              <div class="movie-card">
+                <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
+                <h3><?= htmlspecialchars($data['title']) ?></h3>
+                <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
+                <a href="movie_info.php?id=<?= $movie['id'] ?>" class="btn">View Details</a>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
+      </div>
+
+      <div class="reviews-container">
+        <h3>Your Movie Reviews</h3>
+        <?php if (!$hasReviews): ?>
+          <p>No reviews yet. Go write one!</p>
+        <?php else: ?>
+          <div class="user-reviews-list">
+            <?php foreach ($reviews as $review): ?>
+              <?php
+                $movieDetails = fetchMovieDetails($review['movie_id']);
+                $movieData = $movieDetails['movieData'] ?? null;
+                $movieTitle = $movieData['title'] ?? 'Unknown Movie';
+                $movieRating = isset($review['rating']) ? number_format($review['rating'], 1) : '0.0';
+                $reviewText = htmlspecialchars($review['review'] ?? '');
+                $reviewDate = isset($review['created_at']) ? date('F j, Y', strtotime($review['created_at'])) : 'Unknown';
+              ?>
+              <div class="review-box" data-review-id="<?= $review['review_id'] ?>">
+                <div class="review-header">
+                  <h4><?= htmlspecialchars($movieTitle) ?></h4>
+                  <span class="review-rating">⭐ <span class="rating-display"><?= $movieRating ?></span></span>
+                </div>
+                <p class="review-text" id="review-text-<?= $review['review_id'] ?>"><?= nl2br($reviewText) ?></p>
+                <div class="review-footer">
+                  <small>Posted on <?= $reviewDate ?></small>
+                  <br><br>
+                  <button class="btn edit-review-btn" data-review-id="<?= $review['review_id'] ?>">✏️ Edit</button>
+                  <button type="button" class="btn delete-review-btn" data-review-id="<?= $review['review_id'] ?>">🗑️ Delete</button>
+                </div>
+                <form class="edit-review-form" id="edit-form-<?= $review['review_id'] ?>" data-review-id="<?= $review['review_id'] ?>" style="display: none;">
+                  <textarea name="review_text" required><?= htmlspecialchars($review['review']) ?></textarea>
+                  <input type="number" name="rating" min="0" max="5" step="0.1" value="<?= $movieRating ?>">
+                  <input type="hidden" name="review_id" value="<?= $review['review_id'] ?>">
+                  <button type="submit" class="btn">💾 Save</button>
+                  <button type="button" class="btn cancel-btn">❌ Cancel</button>
+                  <div class="edit-result"></div>
+                </form>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
       </div>
     </div>
-
-    <div class="watchlist-container">
-      <h3>Your Watchlist</h3>
-      <?php if (!$hasWatchlist): ?>
-        <p>No watchlist yet.</p>
-      <?php else: ?>
-        <div class="scroll-container" id="movies-scroll">
-          <?php foreach ($watchlist as $item): ?>
-            <?php
-              $movieId = $item['movie_id'];
-              if (!$movieId) continue;
-              $movieDetails = fetchMovieDetails($movieId);
-              if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
-              $data = $movieDetails['movieData'];
-            ?>
-            <a href="movie_info.php?id=<?= $movieId ?>" class="movie-link">
-              <div class="movie-card">
-                <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
-                <h3><?= htmlspecialchars($data['title']) ?></h3>
-                <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
-              </div>
-            </a>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
-    </div>
-
-    <div class="likes-container">
-      <h3>Movies you Liked</h3>
-      <?php if (!$hasLikedList): ?>
-        <p>No movies liked yet.</p>
-      <?php else: ?>
-        <div class="scroll-container" id="movies-scroll">
-          <?php foreach ($likeList as $item): ?>
-            <?php
-              $movieId = $item['movie_id'];
-              if (!$movieId) continue;
-              $movieDetails = fetchMovieDetails($movieId);
-              if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
-              $data = $movieDetails['movieData'];
-            ?>
-            <a href="movie_info.php?id=<?= $movieId ?>" class="movie-link">
-              <div class="movie-card">
-                <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
-                <h3><?= htmlspecialchars($data['title']) ?></h3>
-                <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
-              </div>
-            </a>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
-    </div>
-
-    <div class="reviews-container">
-      <h3>Your Movie Reviews</h3>
-      <?php if (!$hasReviews): ?>
-        <p>No reviews yet. Go write one!</p>
-      <?php else: ?>
-        <div class="user-reviews-list">
-          <?php foreach ($reviews as $review): ?>
-            <?php
-              $movieDetails = fetchMovieDetails($review['movie_id']);
-              $movieData = $movieDetails['movieData'] ?? null;
-              $movieTitle = $movieData['title'] ?? 'Unknown Movie';
-              $movieRating = isset($review['rating']) ? number_format($review['rating'], 1) : '0.0';
-              $reviewText = htmlspecialchars($review['review'] ?? '');
-              $reviewDate = isset($review['created_at']) ? date('F j, Y', strtotime($review['created_at'])) : 'Unknown';
-            ?>
-            <div class="review-box" data-review-id="<?= $review['review_id'] ?>">
-              <div class="review-header">
-                <h4><?= htmlspecialchars($movieTitle) ?></h4>
-                <span class="review-rating">⭐ <span class="rating-display"><?= $movieRating ?></span></span>
-              </div>
-              <p class="review-text" id="review-text-<?= $review['review_id'] ?>"><?= nl2br($reviewText) ?></p>
-              <div class="review-footer">
-                <small>Posted on <?= $reviewDate ?></small>
-                <br><br>
-                <button class="btn edit-review-btn" data-review-id="<?= $review['review_id'] ?>">✏️ Edit</button>
-                <button type="button" class="btn delete-review-btn" data-review-id="<?= $review['review_id'] ?>">🗑️ Delete</button>
-              </div>
-              <form class="edit-review-form" id="edit-form-<?= $review['review_id'] ?>" data-review-id="<?= $review['review_id'] ?>" style="display: none;">
-                <textarea name="review_text" required><?= htmlspecialchars($review['review']) ?></textarea>
-                <input type="number" name="rating" min="0" max="5" step="0.1" value="<?= $movieRating ?>">
-                <input type="hidden" name="review_id" value="<?= $review['review_id'] ?>">
-                <button type="submit" class="btn">💾 Save</button>
-                <button type="button" class="btn cancel-btn">❌ Cancel</button>
-                <div class="edit-result"></div>
-              </form>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
-    </div>
-  </div>
+  </main>
 
   <?php include 'inc/footer.inc.php'; ?>
 </body>
