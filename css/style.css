@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* Global Styles */
 * {
   margin: 0;
@@ -2142,3 +2143,2663 @@ nav.transparent {
 .profile-icon {
   margin-right: 5px;
 }
+=======
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif !important;
+}
+
+body {
+  background-color: #000 !important; /* Black */
+  color: white !important;
+  text-align: center !important;
+}
+
+/* ========== NAVIGATION STYLES ========== */
+
+nav {
+  background-color: #cc0000; /* MovieVerse Red */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link {
+  padding: 8px 12px;
+}
+
+/* Smaller screens: remove sticky/fixed and zero out padding */
+@media (max-width: 768px) {
+  .fixed-top {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+  }
+  nav {
+    position: static !important; /* Overwrite sticky */
+    top: auto !important;
+    padding: 0 !important;       /* Remove top padding */
+    margin: 0 !important;
+  }
+  
+  /* If you want a column layout on mobile, do that here */
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+/* Logo */
+.nav-logo {
+  height: 50px;
+  width: auto;
+}
+
+/* Controls container (Sort + Search + Profile) */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* Sort dropdown */
+.nav-sort select {
+  background-color: white;
+  color: #000;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Search area (pill style) */
+.nav-search {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 9999px;
+  padding: 6px 12px;
+  gap: 10px;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+#search-input {
+  color: #000 !important;                /* Force black text */
+  -webkit-text-fill-color: #000 !important; /* WebKit fix */
+  -webkit-text-stroke-width: 0 !important;  /* Remove stroke if any */
+  -webkit-text-stroke-color: #000 !important;
+  caret-color: #000 !important;          /* Black cursor */
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  width: 150px !important;
+}
+
+/* Search button */
+.search-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000;
+}
+
+/* Dropdown button */
+#dropdown-button {
+  background: none;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: #000;
+}
+
+/* Dropdown menu */
+#dropdown-menu {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  width: 150px;
+  padding: 10px 0;
+  z-index: 999;
+  display: none;
+}
+
+#dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#dropdown-menu li {
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#dropdown-menu li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Profile Icon */
+#profile-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.profile-icon {
+  font-size: 22px;
+  color: white;
+}
+
+.profile-icon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  position: relative;
+}
+
+
+
+/* Utility class to toggle visibility */
+.hidden {
+  display: none !important;
+}
+
+.custom-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #222;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  z-index: 10000;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.custom-toast.success {
+  background-color: #4CAF50; /* Green */
+}
+
+.custom-toast.error {
+  background-color: #e53935; /* Red */
+}
+
+.custom-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* Enhanced Dropdown Button */
+#dropdown-button {
+  background-color: #111;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 25px;
+  border: 1px solid #444;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+#dropdown-button:hover {
+  background-color: #222;
+}
+
+/* Enhanced Dropdown Menu */
+#dropdown-menu {
+  position: absolute;
+  background-color: #1c1c1c;
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  list-style: none;
+  padding: 10px 0;
+  width: 160px;
+  z-index: 999;
+  margin-top: 5px;
+}
+
+#dropdown-menu li {
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#dropdown-menu li:hover {
+  background-color: #333;
+}
+
+
+/* Section Headers */
+.header-title {
+  font-size: 28px !important;
+  font-weight: bold !important;
+  margin-bottom: 20px !important;
+  text-align: center !important;
+}
+
+/* Scroll Containers */
+.scroll-container {
+  display: flex !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  gap: 20px !important;
+  padding: 10px !important;
+  scrollbar-width: none !important;
+  scroll-behavior: smooth !important;
+  position: relative !important;
+  border: none;
+  outline: none;
+}
+.scroll-container::-webkit-scrollbar {
+  display: none !important;
+}
+
+.section-header{
+  color: white !important;
+  font-size: 1.2rem;
+  font-weight: bold !important;
+  margin: 2rem 1rem 1rem;
+  text-align: left !important; 
+}
+
+/* Movie Cards */
+.movie-card {
+  background-color: #111 !important;
+  padding: 15px !important;
+  border-radius: 8px !important;
+  width: 200px !important;
+  text-align: center !important;
+  transition: transform 0.2s ease-in-out !important;
+  flex-shrink: 0 !important;
+  height: 400px !important; /* Adjusted height for extra info */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  text-decoration: none !important;
+  outline: none;
+  border: none;
+}
+
+.movie-card h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  outline: none;
+}
+
+.movie-card p {
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  outline: none;
+}
+
+.movie-card:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Movie Image */
+.movie-img {
+  width: 100% !important;
+  height: 250px !important;
+  object-fit: cover !important;
+  border-radius: 5px !important;
+}
+
+/* Additional Movie Info */
+.movie-info {
+  font-size: 12px;
+  color: #ccc;
+  margin: 5px 0;
+}
+
+/* Rating */
+.movie-rating {
+  font-size: 14px;
+  color: #ffcc00;
+  margin: 5px 0;
+}
+
+/* Watchlist Button */
+.btn {
+  background-color: #ffcc00 !important;
+  color: black !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  margin-top: 5px !important;
+  display: block !important;
+  width: 100% !important;
+  border: none !important;
+  text-decoration: none !important;
+}
+.btn:hover {
+  background-color: #ffdb4d !important;
+}
+
+/* Scroll Buttons */
+.scroll-btn {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 10px !important;
+  border-radius: 50% !important;
+  z-index: 10 !important;
+}
+
+.watchlist-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #222;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  opacity: 0.95;
+}
+
+/* Watchlist Modal Popup */
+.watchlist-modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.watchlist-modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  font-size: 16px;
+  color: #222;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.watchlist-modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.watchlist-modal-close:hover {
+  color: #000;
+}
+
+
+.watchlist-popup.success {
+  background-color: #28a745; /* green */
+}
+
+.watchlist-popup.error {
+  background-color: #dc3545; /* red */
+}
+
+.watchlist-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #222;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  font-size: 16px;
+  opacity: 0.95;
+  transition: all 0.3s ease;
+}
+
+.watchlist-popup.success {
+  background-color: #28a745;
+}
+
+.watchlist-popup.error {
+  background-color: #dc3545;
+}
+
+
+
+.movies-container {
+  position: relative !important;
+}
+.recommended-container {
+  position: relative !important;
+}
+.movies-container .left-btn {
+  left: 10px !important;
+}
+.movies-container .right-btn {
+  right: 10px !important;
+}
+.recommended-container .left-btn {
+  left: 10px !important;
+}
+.recommended-container .right-btn {
+  right: 10px !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .movie-card {
+    width: 150px !important;
+    height: 350px !important;
+  }
+  .movie-img {
+    height: 200px !important;
+  }
+}
+@media (max-width: 480px) {
+  .movie-card {
+    width: 120px !important;
+    height: 300px !important;
+  }
+  .movie-img {
+    height: 180px !important;
+  }
+}
+
+/* Table Section */
+.reviews-container {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.reviews-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #111;
+  border-radius: 10px;
+  color: #eee;
+}
+
+.reviews-section {
+  margin-top: 3rem;
+  padding: 1rem;
+}
+
+.review-card {
+  display: flex;
+  align-items: flex-start;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+
+.review-card:hover {
+  transform: translateY(-2px);
+}
+
+
+
+.review-content {
+  flex: 1;
+  color: #ddd;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 0.4rem;
+}
+
+.review-header strong {
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.review-date {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.review-rating {
+  margin-left: auto;
+  font-weight: bold;
+  background-color: #333;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  color: #facc15;
+}
+
+.review-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+/* Style for each review box */
+.review-box {
+  background-color: #1f1f1f;
+  border-left: 4px solid #ffc107;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.2rem 0;
+  color: white;
+  word-wrap: break-word;
+  min-height: 200px;
+  width: 120%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+.review-body p {
+  margin-top: 0.75rem;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.review-scroll-area {
+  max-height: 600px;
+  overflow-y: auto;       /* enables vertical scroll */
+  overflow-x: hidden;     /* disables horizontal scroll */
+  padding-right: 1rem;
+}
+
+.review-scroll-area::-webkit-scrollbar {
+  width: 12px;
+}
+
+.review-scroll-area::-webkit-scrollbar-thumb {
+  background-color: #ffc107;
+  border-radius: 4px;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.review-profile-pic {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ffc107;
+}
+
+
+
+/* Header with movie title and rating */
+
+
+.review-header h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #ffc107;
+}
+
+.review-rating {
+  background-color: #333;
+  padding: 0.3rem 0.7rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Body text of the review */
+.review-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e0e0e0;
+  margin-bottom: 0.75rem;
+}
+
+/* Footer with date */
+.review-footer small {
+  color: #aaa;
+}
+
+table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+  background: #222;
+  color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+
+
+
+th {
+  background: #333;
+  color: #cc0000;
+}
+
+td {
+  background: #292929;
+}
+
+tr:hover {
+  background: #444;
+}
+
+
+/* Request a Movie Section (Footer on index.html and styles on request.html) */
+
+.request-section {
+  background-color: #111;
+  padding: 2rem;
+  margin: 3rem auto;
+  text-align: center;
+  border-radius: 12px;
+  max-width: 800px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.request-section h2 {
+  color: #ffc107;
+}
+
+.request-section p {
+  color: #ddd;
+  margin-top: 0.5rem;
+}
+
+.request-section .btn {
+  background-color: #ffc107;
+  color: #000;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.request-section .btn:hover {
+  background-color: #ffca2c;
+}
+
+footer {
+  background-color: #222;
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+  margin-top: 40px;
+}
+
+footer p a {
+  color: #ffcc00;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer p a:hover {
+  text-decoration: underline;
+}
+
+.footer-links {
+    color: #fff; /* Set the link color to white */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    display: flex;
+    gap: 40px; /* Increased the gap between the links */
+    justify-content: center; /* Centers the links */
+    align-items: center; /* Aligns the items vertically in the middle */
+}
+
+
+/* Request Page Styling */
+main {
+  background-color: #111;
+  color: white;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Page Header */
+.page-header h2 {
+  font-size: 2.5em;
+  color: #cc0000;
+  margin-bottom: 10px;
+}
+
+.page-header p {
+  font-size: 1.2em;
+  color: #ccc;
+}
+
+/* Request Form Container */
+.request-form-container {
+  margin: 30px 0;
+}
+
+#request-form {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+#request-input {
+  padding: 10px;
+  width: 300px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #222;
+  color: white;
+}
+
+#request-form button {
+  padding: 10px 20px;
+  background-color: #ffcc00;
+  color: black;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+#request-form button:hover {
+  background-color: #ffdb4d;
+}
+
+/* Recent Requests Section */
+.recent-requests {
+  margin-top: 40px;
+}
+
+.recent-requests h3 {
+  font-size: 2em;
+  color: #ffcc00;
+  margin-bottom: 15px;
+}
+
+.recent-requests ul {
+  list-style-type: none;
+  padding: 0;
+  color: #ccc;
+}
+
+.recent-requests li {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+/* Footer Styling */
+footer {
+  background-color: #222;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+footer p a {
+  color: #ffcc00;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer p a:hover {
+  text-decoration: underline;
+}
+
+
+/* ----- Profile Icon & Dropdown ----- */
+/* Profile Toggle (clickable area with icon + username) */
+.profile-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.profile-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Profile Icon */
+.profile-icon {
+  font-size: 20px;
+  color: #fff;
+}
+
+/* Username next to the icon */
+.profile-name {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Dropdown menu */
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #222;
+  color: #fff;
+  border-radius: 5px;
+  padding: 0.5rem 0;
+  margin-top: 5px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  min-width: 150px;
+  z-index: 999;
+}
+
+/* Dropdown list items */
+.profile-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-dropdown li {
+  padding: 10px 15px;
+  transition: background 0.2s ease;
+}
+
+.profile-dropdown li:hover {
+  background-color: #444;
+}
+
+.profile-dropdown li a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+
+/* Ensure the .hidden class hides elements */
+.hidden {
+  display: none !important;
+}
+
+/* Enhanced About Us Page Styles */
+
+/* General Page Layout */
+body {
+  background-color: #0a0a0a !important; /* Dark background */
+  color: #fff !important; /* Light text */
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-top: 50px;
+}
+
+/* Header and Team Section */
+header {
+  padding: 40px 20px;
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+header h1 {
+  color: #cc0000;
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.team-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  justify-content: center;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.team-member {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+.team-member img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.team-member h3 {
+  margin: 10px 0 5px;
+  color: #cc0000;
+}
+
+.team-member p {
+  margin: 0;
+  color: #ccc;
+}
+
+
+/* Header and About Section Styling */
+.header-title {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+/* Logo Styling */
+.nav-logo {
+  width: 70px; /* Adjust logo size to be smaller */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 10px; /* Space between logo and title */
+}
+
+/* General styles for sign-in and sign-up pages */
+.auth-form-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+  color: #ccc;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 5px;
+}
+
+button.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #f1c40f;
+  color: #121212;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.submit-btn:hover {
+  background-color: #e1b20f;
+}
+
+footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+footer p {
+  font-size: 14px;
+}
+
+footer a {
+  color: #f1c40f;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* Navigation links for Login & Sign Up */
+.auth-links {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.auth-link {
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 8px 16px;
+  background-color: #ffcc00;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.auth-link:hover {
+  background-color: #ffdb4d;
+}
+
+/* Add some space between the search input, dropdown, and auth links */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+}
+
+/* Mission and Values Section */
+.mission-values {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.mission-statement, .values {
+  width: 48%; /* Each section takes up about half of the available space */
+  background: #333;  /* Grey box background */
+  color: white;      /* White text color for contrast */
+  padding: 20px;     /* Padding inside the boxes */
+  border-radius: 8px;  /* Rounded corners for a clean look */
+}
+
+.mission-statement h2, .values h2 {
+  color: #cc0000;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.mission-statement p, .values ul {
+  font-size: 1rem;
+  color: #bbb;
+  text-align: justify;  /* Justify the text for both sections */
+}
+
+.values ul {
+  list-style: none;
+  padding: 0;
+}
+
+.values li {
+  font-size: 1.1rem;
+  color: #bbb;
+  margin: 10px 0;
+}
+
+/* Call to Action (CTA) Section */
+.cta {
+  background: #222;
+  color: white;
+  padding: 40px 20px;
+  margin: 40px auto;
+  max-width: 900px;
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* Align items vertically */
+  align-items: center;
+}
+
+.cta h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #cc0000;
+}
+
+.cta p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #bbb;
+}
+
+.cta-button {
+  background: #cc0000;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  margin-top: 20px; /* Ensure button is under text */
+}
+
+.cta-button:hover {
+  background: #b30000;
+}
+
+/*Style for movie details*/
+.movie-detail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  color: white;
+  align-items: flex-start;
+}
+
+.movie-detail-poster {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.movie-info-cast-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2rem;
+  flex: 1;
+}
+
+.movie-detail-info {
+  flex: 2;
+  min-width: 300px;
+}
+
+.movie-cast {
+  flex: 1;
+  background-color: #1a1a1a;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.movie-cast h2 {
+  margin-bottom: 1rem;
+}
+
+.movie-cast ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.movie-cast li {
+  background-color: #333;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.movie-bottom-row {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 2rem;
+}
+
+.movie-trailer {
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+.movie-recommendations {
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+.scroll-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-top: 1rem;
+}
+
+.btn-review {
+  background-color: #5cb85c;
+  color: black;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%
+}
+
+.btn-review:hover {
+  background-color: #4cae4c;
+}
+
+/* Profile Section */
+.profile-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #111;
+  color: white;
+}
+
+/* Profile Details Section */
+.profile-details {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.profile-image-container {
+  flex: 1;
+  text-align: center;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border: 2px solid #ccc;
+}
+
+.profile-info {
+  flex: 2;
+}
+
+.profile-info h2 {
+  font-size: 2rem;
+  color: #cc0000;
+  margin-bottom: 15px;
+}
+
+.profile-info p {
+  margin-bottom: 1rem;
+}
+
+.profile-info .btn {
+  background-color: #ffcc00;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.profile-info .btn:hover {
+  background-color: #ffdb4d;
+}
+
+/* Watchlist Section */
+.watchlist-container {
+  margin-top: 2rem;
+}
+
+.scroll-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.movie-card {
+  width: 200px;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+  border:none;
+  outline: none;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.movie-card h4 {
+  margin-top: 10px;
+}
+
+.movie-card .btn {
+  background-color: #ffcc00;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.movie-card .btn:hover {
+  background-color: #ffdb4d;
+}
+
+/* Reviews Section */
+.reviews-container {
+  margin-top: 2rem;
+}
+
+.reviews-buttons a {
+  background-color: #ffcc00;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.reviews-buttons a:hover {
+  background-color: #ffdb4d;
+}
+
+/* --- Additional rules from style1.css --- */
+#request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;}
+#request-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #222;
+  color: #fff;
+  font-size: 1rem;}
+#request-input::placeholder {
+  color: #777;}
+#search-input {
+  height: 100% !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 14px !important;
+  color: #fff !important; /* White text for visibility */
+  padding: 0 10px !important;
+  flex: 1 !important;
+  background: none !important; /* No background */}
+*/
+
+/* Submit Button */
+button {
+  background-color: #cc0000; /* Red color */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;}
+.auth-form input {
+  background-color: #333;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 5px;
+  color: white;}
+.auth-tab {
+  background: #cc0000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin: 0 5px;
+  transition: background 0.3s ease;}
+.auth-tab.active {
+  background: #ffcc00;
+  color: black;}
+.cta-signup .signup-text {
+  font-size: 1em;
+  margin-bottom: 25px;}
+.cta-signup .subheading {
+  font-size: 1.2em;
+  font-weight: 500;
+  margin-bottom: 15px;}
+.cta-signup h1 {
+  font-size: 2.8em;
+  font-weight: bold;
+  margin-bottom: 20px;}
+.cta-signup::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Translucent black overlay */
+  z-index: -1;}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.3s ease;
+  padding: 0 20px;
+  background-color: white;       /* Light background */
+  color: black;                  /* Dark text */
+  font-size: 16px;
+  border-top: 1px solid #ccc;    /* Optional: subtle border */}
+.faq-answer.open {
+  padding: 20px;
+  max-height: 500px;}
+.faq-container h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  font-weight: bold;}
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;}
+.faq-form button:focus {
+  outline: 3px solid #f6121d; /* Adds focus outline for accessibility */}
+.faq-form button:hover {
+  background-color: #f6121d; /* Darker red on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */}
+.faq-item {
+  background-color: #2e2e2e;
+  margin-bottom: 10px;
+  border: none;}
+.faq-question .plus {
+  font-size: 24px;
+  margin-left: 10px;}
+.faq-question {
+  width: 100%;
+  text-align: left;
+  padding: 20px;
+  background-color: #2e2e2e;
+  color: white;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;}
+.faq-question:hover {
+  background-color: #3a3a3a;}
+.modal-content {
+  background: #1a1a1a; /* Dark background for modal */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Optional shadow for effect */}
+.movie-actions .btn {
+  flex: 1;
+  font-size: 14px;
+  padding: 8px 5px;}
+
+.movies-wrapper {
+  position: relative; /* or whatever width you prefer */
+  margin: 0 auto; } 
+
+.movie-link{
+  text-decoration: none; 
+  border: none; 
+  outline: none
+}
+.nav-links li a {
+  color: white !important;
+  text-decoration: none !important;
+  font-size: 16px;}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin-left: 20px;}
+
+  .spotlight-wrapper {
+    position: relative;
+    height: 70vh;
+    overflow: hidden;
+  }
+  
+  .featured-card {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border: none;  /* Remove borders */
+    box-shadow: none;  /* Remove shadows */
+    outline: none;  /* Remove outlines */
+  }
+  
+  .featured-card.active {
+    opacity: 1;
+    position: relative;
+    z-index: 1;
+  }
+  
+
+   /* for support.php
+  /* Optional: Custom styles for FAQ toggle, if needed */
+  .faq-button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1.25rem;
+    color: #0d6efd; /* Bootstrap primary color */
+  }
+  
+  .featured-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .spotlight-info {
+    position: absolute;
+    bottom: 40%;
+    left: 5%;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1rem;
+    border-radius: 8px;
+    color: #fff;
+  }
+  
+  .spotlight-info .btn {
+    margin-top: 5px;
+    background-color: #ffcc00;
+    color: black;
+    padding: 8px 16px;
+    border-radius: 5px;
+    display: inline-block;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .spotlight-info .btn:hover {
+    background-color: #ffdb4d;
+  }
+  
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+  }
+  
+  .arrow:hover {
+    background-color: rgba(0,0,0,0.8);
+  }
+  
+  .left-arrow {
+    left: 20px;
+  }
+  
+  .right-arrow {
+    right: 20px;
+  }
+  
+
+/* Overlay Info Text */
+.now-showing-info {
+  position: absolute;
+  bottom: 20%;
+  left: 5%;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 90%;
+}
+
+.now-showing-info h2 {
+  color: #ffcc00;
+  font-size: 2em;
+  margin-bottom: 5px;
+}
+
+.now-showing-info .movie-info {
+  font-size: 1em;
+  color: #ccc;
+  margin-bottom: 5px;
+}
+
+.now-showing-info .movie-rating {
+  font-size: 1.1em;
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+
+.now-showing-info .movie-info {
+  font-size: 1em;
+  margin-bottom: 5px;
+  color: #ccc;}
+.now-showing-info .movie-rating {
+  font-size: 1.1em;
+  color: #ffcc00;
+  font-weight: bold;}
+.now-showing-info h2 {
+  font-size: 2em;
+  margin-bottom: 5px;
+  color: #ffcc00; /* a bright color to stand out */}
+.popcorn-icon {
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  opacity: 0.5; /* Darker popcorn (default state) */
+  filter: brightness(0.6); /* Darker popcorn */
+  transition: opacity 0.3s ease, filter 0.3s ease;}
+.popcorn-icon {
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  opacity: 0.6; /* Slightly faded until selected */
+  transition: opacity 0.3s ease;}
+.popcorn-icon.selected {
+  opacity: 1; /* Full opacity when selected */
+  filter: brightness(1); /* Full brightness when selected */}
+.popcorn-icon.selected {
+  opacity: 1; /* Full opacity when selected */}
+.popcorn-icon:hover {
+  opacity: 1; /* Highlight when hovered */
+  filter: brightness(1.2); /* Slight brightness increase on hover */}
+.popcorn-icon:hover {
+  opacity: 1; /* Highlight when hovered */}
+.recent-requests h3 {
+  font-size: 1.8rem;
+  color: #ffcc00;
+  margin-bottom: 20px;
+  text-align: center;}
+.recent-requests li {
+  font-size: 1.1rem;
+  padding: 8px 0;
+  ;}
+.recent-requests ul {
+  list-style: none;
+  padding: 0;}
+.request-btn {
+  padding: 12px;
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;}
+.request-btn:hover {
+  background-color: #f7b500;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 204, 0, 0.2);}
+.search-btn {
+  height: 100% !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 5px !important;
+  color: #fff !important; /* White icon for visibility */}
+.search-btn:hover {
+  color: #ccc !important; /* Slightly lighter on hover */}
+.signup-form button {
+  padding: 15px 25px;
+  background-color: #e50914;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;}
+.signup-form button:hover {
+  background-color: #f6121d;}
+.signup-form input[type="email"] {
+  flex: 1;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  min-width: 250px;
+  box-sizing: border-box;}
+.signup-form {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 600px;
+  margin: 0 auto;}
+/* --- Now Showing Carousel Styles --- */
+
+nav.transparent {
+  background-color: transparent !important;}
+/* Auth Modal Tabs */
+.auth-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;}
+/* Authentication Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;}
+
+/* CTA Signup Section with background image */
+.cta-signup {
+  background: url('images/background.jpg') no-repeat center center;
+  background-size: cover;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 2;}
+/* Close icon */
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #ccc;}
+/* Ensure child elements remain visible */
+#dropdown-button {
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  background: none !important;
+  border: none !important;
+  color: #fff !important; /* Change to white for visibility on transparent bg */
+  cursor: pointer !important;}
+/* FAQ Form Container */
+.faq-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;}
+/* Form Layout */
+.faq-form {
+  padding-bottom: 0;}
+/* Hide elements with .hidden */
+.hidden {
+  display: none !important;}
+/* Hover effect on the icon */
+.review-btn:hover img {
+  filter: brightness(0) saturate(100%) invert(40%) sepia(99%) saturate(2846%) hue-rotate(3deg) brightness(95%) contrast(100%);}
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Dark transparent background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;}
+/* Movie Actions Container */
+.movie-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  margin-top: 10px;}
+/* Movie Cards */
+.movie-card {
+  background-color: #111 !important;
+  border: none;
+  padding: 15px !important;
+  border-radius: 8px !important;
+  width: 200px !important;
+  text-align: center !important;
+  transition: transform 0.2s ease-in-out !important;
+  flex-shrink: 0 !important;
+  height: 400px !important; /* Adjusted height for extra info */
+  display: flex !important;
+  flex-direction: column !important;
+  outline: none;
+  justify-content: space-between !important;}
+  
+/* Navbar */
+nav {
+  background-color: #cc0000 !important; /* Red */
+  padding: 15px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important; /* Keep everything on one line */
+  position: relative !important;
+  transition: background-color 0.3s ease !important;}
+
+  /* Navbar General Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #a61c1c; /* Reddish background to match the theme */
+  padding: 10px 20px;
+}
+
+/* Nav Controls (contains all navigation elements) */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Nav Menu (contains Top 250, Category, and Profile) */
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Existing Global and Navigation styles remain unchanged */
+
+/* New styles for hamburger menu and nav-menu */
+.hamburger-menu {
+  display: none; /* hidden on desktop */
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.hamburger-menu span {
+  width: 100%;
+  height: 3px;
+  background-color: #fff; /* white lines to contrast with the theme */
+  margin: 3px 0;
+  transition: all 0.3s ease;
+}
+
+/* Mobile View adjustments */
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: flex;
+  }
+  .nav-menu {
+    display: none;
+    position: absolute;
+    top: 60px; /* adjust based on navbar height */
+    right: 10px;
+    width: 200px;
+    background-color: #cc0000; /* MovieVerse theme color */
+    flex-direction: column;
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+  }
+  .nav-menu.active {
+    display: flex;
+  }
+  .nav-menu .nav-category,
+  .nav-menu #profile-container {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+  }
+  /* Adjust dropdown and profile inside nav-menu */
+  #dropdown-button {
+    width: 100%;
+    border-radius: 0;
+  }
+  #dropdown-menu {
+    width: 100%;
+    position: static;
+  }
+  #profile-dropdown {
+    width: 100%;
+    position: static;
+    background-color: #cc0000;
+    box-shadow: none;
+  }
+  #profile-dropdown li {
+    padding: 10px 0;
+  }
+  #profile-dropdown li a {
+    color: #fff;
+  }
+  #profile-dropdown li:hover {
+    background-color: #b30000;
+  }
+  /* Keep sort and search visible */
+  .nav-sort,
+  .nav-search {
+    display: flex;
+  }
+  #search-input {
+    width: 150px;
+  }
+}
+
+
+.search-btn {
+  background-color: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Mobile View (below 768px) */
+@media (max-width: 768px) {
+  /* Show the hamburger menu icon */
+  .hamburger-menu {
+      display: flex;
+  }
+
+  /* Hide the nav menu by default in mobile view */
+  .nav-menu {
+      display: none;
+      position: absolute;
+      top: 60px; /* Adjust based on navbar height */
+      left: 0;
+      width: 100%;
+      background-color: #a61c1c; /* Match the reddish theme */
+      flex-direction: column;
+      padding: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Show the nav menu when active */
+  .nav-menu.active {
+      display: flex;
+  }
+
+  /* Style the nav menu items in mobile view */
+  .nav-menu .nav-link,
+  .nav-menu .nav-category,
+  .nav-menu #profile-container {
+      width: 100%;
+      text-align: center;
+      padding: 10px 0;
+  }
+
+  /* Adjust the category dropdown in mobile view */
+  .nav-category {
+      width: 100%;
+  }
+
+  #dropdown-button {
+      width: 100%;
+      border-radius: 0;
+  }
+
+  #dropdown-menu {
+      width: 100%;
+      position: static;
+  }
+
+  /* Adjust the profile dropdown in mobile view */
+  #profile-container {
+      width: 100%;
+  }
+
+  #profile-dropdown {
+      width: 100%;
+      position: static;
+      background-color: #a61c1c; /* Match the reddish theme */
+      box-shadow: none;
+  }
+
+  #profile-dropdown li {
+      padding: 10px 0;
+  }
+
+  #profile-dropdown li a {
+      color: #fff;
+  }
+
+  #profile-dropdown li:hover {
+      background-color: #8b1717; /* Slightly darker red on hover */
+  }
+
+  /* Keep Sort By and Search visible */
+  .nav-sort,
+  .nav-search {
+      display: flex;
+  }
+
+  /* Adjust search bar width in mobile view */
+  #search-input {
+      width: 150px;
+  }
+}
+
+/* Hamburger Menu Animation (when clicked) */
+.hamburger-menu.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+/* New Navigation Links */
+.nav-left {
+  display: flex;
+  align-items: center;}
+/* Now Showing Info Overlay */
+.now-showing-info {
+  position: absolute;
+  bottom: 20%;
+  left: 5%;
+  background: rgba(0, 0, 0, 0.6); /* semi-transparent background for readability */
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-align: left;
+  max-width: 90%;}
+/* Recent Requests Section */
+.recent-requests {
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  text-align: left;}
+/* Request Form Styles */
+.request-form-container {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);}
+/* Review Button Hover Effect */
+.review-btn:hover {
+  background-color: #f7b500;  /* Slightly darker golden color */
+  transform: translateY(-2px); /* Lift effect */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Shadow effect */}
+/* Review Button Icon Styling */
+.review-btn img {
+  width: 20px;
+  height: auto;
+  filter: brightness(0) saturate(100%) invert(45%) sepia(68%) saturate(2262%) hue-rotate(358deg) brightness(92%) contrast(94%);
+  transition: filter 0.3s ease;}
+/* Review Button Styling */
+.review-btn {
+  background-color: #ffcc00;  /* Golden background */
+  color: black;
+  padding: 12px 20px;
+  border-radius: 10px; /* Rounded corners */
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;}
+/* Review Textarea */
+textarea {
+  background-color: #333;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  resize: vertical;
+  margin-bottom: 15px;
+  font-size: 14px;}
+/* Search & Dropdown "Pill" Container */
+.nav-search {
+  height: 30px !important;           
+  padding: 0 10px !important;        /* Inner spacing */
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 9999px !important;
+  background-color: #fff !important; /* Default background */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease !important; /* Smooth transition */}
+/* Submit Button Styling */
+.faq-form button {
+  width: 100%;
+  padding: 15px;
+  background-color: #e50914; /* Match theme red */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 0;
+  margin-bottom: 0;}
+/* Textarea Styling */
+#question {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #222;
+  color: white;
+  resize: vertical;
+  box-sizing: border-box;}
+/* Transparent state for search bar */
+.nav-search.transparent {
+  background-color: transparent !important;
+  box-shadow: none !important; /* Remove shadow when transparent */}
+/* Watchlist Button */
+.btn {
+  background-color: #ffcc00 !important;
+  color: black !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  margin-top: 5px !important;
+  display: block !important;
+  width: 100% !important;
+  border: none !important;}
+button:hover {
+  background-color: #b30000; /* Slightly darker red when hovered */}
+nav.transparent {
+  background-color: transparent !important;}
+
+  .top-movie-list {
+    max-width: 1000px;
+    margin: 40px auto;
+  }
+  .movie-card-top {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #333;
+    background: #111;
+    color: #fff;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  .movie-card-top img {
+    height: 140px;
+    border-radius: 6px;
+    margin-right: 15px;
+  }
+  .movie-info {
+    flex-grow: 1;
+  }
+  .movie-title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .movie-meta {
+    color: #ccc;
+    margin-top: 5px;
+  }
+  .movie-rating {
+    margin-top: 10px;
+    font-size: 16px;
+    color: gold;
+  }
+
+  /* Category Page Styles */
+.category-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.category-container h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+#genre-select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+#movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+  margin-top: 1rem;
+}
+
+.movie-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: #000;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  width: 180px;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 270px;
+  object-fit: cover;
+  border-bottom: 1px solid #ccc;
+}
+.movie-card h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0 0.3rem;
+  color: #fff !important; /* ⬅️ Make title white */
+}
+
+.movie-card p {
+  font-size: 0.9rem;
+  color: #ddd; /* ⬅️ Make subtitle/info text lighter */
+}
+
+
+/* Container for the watchlist button and heart icon */
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Slightly increased space between the watchlist button and heart icon */
+  margin-top: 10px;
+}
+
+/* Specific styling for the Top 10 section watchlist button */
+.top10-watchlist-btn {
+  background-color: #f5c518; /* Yellow color */
+  color: #000;
+  padding: 10px 20px; /* Increased padding for a larger button */
+  border: none;
+  border-radius: 6px; /* Slightly larger border-radius for a smoother look */
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px; /* Increased font size for the button text */
+}
+
+/* Styling for the heart icon */
+.like-icon {
+  font-size: 24px; /* Increased size of the heart icon */
+  cursor: pointer;
+  color: #ccc; /* Default empty heart color (gray) */
+  transition: color 0.3s ease;
+}
+
+/* Filled heart (liked state) */
+.like-icon.liked {
+  color: #ff0000; /* Pure red color for the filled heart */
+  font-size: 24px; /* Ensure the size remains consistent */
+  content: "❤️"; /* Filled heart emoji */
+}
+
+/* Hover effect for the heart icon */
+.like-icon:hover {
+  color: #ff4d4d; /* Slightly lighter red on hover for the empty state */
+}
+
+/* Hide dropdown by default */
+.profile-dropdown.hidden {
+  display: none;
+}
+
+/* Position dropdown under profile */
+.profile-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 10px;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.profile-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-dropdown ul li {
+  margin: 5px 0;
+}
+
+.profile-dropdown ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.profile-dropdown ul li a:hover {
+  color: gold;
+}
+
+/* Profile picture container */
+.nav-profile-pic {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Genre bar styling */ 
+.genre-bar {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 10px 0;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  /* For Firefox */
+  -ms-overflow-style: none;
+  /* For Internet Explorer and Edge */
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+.genre-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Profile image */
+.nav-profile-pic img.profile-pic {
+  width: 35px;
+  height: 35px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.navbar.custom-navbar {
+  background-color: #111;
+}
+
+.form-control {
+  background-color: #222 !important;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.btn-search {
+  background-color: gold;
+  color: black;
+  border: none;
+}
+
+
+
+
+
+/* General navbar background and padding */
+.custom-navbar {
+  background-color: #1c1c1c;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+}
+
+/* Logo */
+.nav-logo {
+  height: 40px;
+}
+
+/* Navbar links */
+.navbar-nav .nav-link {
+  color: white;
+  font-weight: 500;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.navbar-nav .nav-link:hover {
+  color: gold;
+}
+
+/* Search bar */
+#search-form input[type="search"] {
+  border-radius: 5px;
+}
+
+#search-form button {
+  font-weight: bold;
+}
+
+/* Profile dropdown button */
+#auth-container .dropdown-toggle {
+  border: none;
+  background-color: #facc15;
+  color: #1c1c1c;
+  font-weight: 500;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+}
+
+/* Profile pic */
+.profile-pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  background-color: #222;
+  border: none;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.3);
+}
+
+.dropdown-menu .dropdown-item {
+  color: white;
+}
+.genre-warning {
+  color: #ff4c4c; /* bright red */
+  text-align: center;
+  font-weight: 500;
+  margin-top: 20px;
+  white-space: nowrap; /* force it to stay on one line */
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #333;
+  color: gold;
+}
+
+/* Hamburger icon background for visibility */
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.8)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Mobile nav padding */
+@media (max-width: 992px) {
+  .navbar-collapse {
+    background-color: #1c1c1c;
+    padding: 1rem;
+  }
+  .dropdown-menu {
+    margin-top: 10px;
+  }
+}
+
+
+.review-scroll-area {
+  max-height: 700px;             /* limit vertical space */
+  overflow-y: auto;              /* enable vertical scroll */
+  padding-right: 10px;           /* prevent scrollbar from overlapping */
+}
+
+.like-icon {
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  display: inline-block;
+  color: #ffcc00;
+}
+.like-icon:hover {
+  color: red;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.review-profile-pic {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ffc107;
+}
+.button-container .btn {
+  flex-grow: 1;
+  padding: 6px 12px;
+}
+
+/* Remove blue color and underline from nav links */
+nav a.nav-link,
+nav a.nav-link:visited {
+  color: white;
+  text-decoration: none;
+}
+.recommended-section {
+  display: block;
+  overflow: visible;
+  height: auto;
+}
+.button-container .like-icon {
+  font-size: 22px;
+  cursor: pointer;
+  color: #ffcc00;
+  transition: color 0.2s ease;
+}
+
+nav a.nav-link:hover {
+  text-decoration: underline;
+  color: #ffc107; /* Optional: highlight on hover */
+}
+.movie-card {
+  min-height: 400px;
+  height: auto;
+}
+.button-container .like-icon:hover {
+  color: red;
+}
+
+.genre-btn {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.genre-btn:hover {
+  background-color: #555;
+}
+
+.genre-btn.active {
+  background-color: #fff;
+  color: #000;
+}
+>>>>>>> Stashed changes
