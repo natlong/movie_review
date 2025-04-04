@@ -59,6 +59,7 @@
     if ($success) {
         $_SESSION["user_id"] = $result; 
         $_SESSION["username"] = $name;
+        $_SESSION["email"] = $email;
         $_SESSION["role"] = "user"; // Default role
         header("Location: signup.php?success=".urlencode("Account created successfully! You will be redirected to the profile page."));
         exit();

@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+// Include necessary header and navigation elements
 include 'inc/head.inc.php';
 include 'inc/nav.inc.php';
 
@@ -17,6 +19,7 @@ $result = $conn->query($sql);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Request - MovieVerse</title>
+  <!-- If possible, include head.inc.php only once to avoid redundancy -->
   <?php include 'inc/head.inc.php'; ?>
 </head>
 <body>
@@ -34,7 +37,7 @@ $result = $conn->query($sql);
         <input type="text" id="request-input" name="movie_name" class="form-control" placeholder="Enter movie name" required>
       </div>
       <div style="display: flex; justify-content: center; margin-top: 15px;">
-      <button type="submit" class="btn btn-primary">Send Request</button>
+        <button type="submit" class="btn btn-primary">Send Request</button>
       </div>
     </form>
   </section>
@@ -45,6 +48,7 @@ $result = $conn->query($sql);
       <?php
       if ($result && $result->num_rows > 0) {
           while ($row = $result->fetch_assoc()) {
+              // Escaping the output to prevent XSS
               echo '<li class="list-group-item">' . htmlspecialchars($row['request_name'], ENT_QUOTES, 'UTF-8') . '</li>';
           }
       } else {

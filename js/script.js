@@ -7,7 +7,6 @@ let currentFeatured = 0;
 let spotlightInterval;
 let spotlightPaused = false;
 
-// Show the current featured movie
 function showFeatured(index) {
   const cards = document.querySelectorAll(".featured-card");
   if (!cards.length) return;
@@ -21,25 +20,20 @@ function showFeatured(index) {
   currentFeatured = index;
 }
 
-// Go to the next featured movie
 function nextFeatured() {
   const cards = document.querySelectorAll(".featured-card");
   if (!cards.length) return;
-
   const nextIndex = (currentFeatured + 1) % cards.length;
   showFeatured(nextIndex);
 }
 
-// Go to the previous featured movie
 function prevFeatured() {
   const cards = document.querySelectorAll(".featured-card");
   if (!cards.length) return;
-
   const prevIndex = (currentFeatured - 1 + cards.length) % cards.length;
   showFeatured(prevIndex);
 }
 
-// Start the auto-rotation
 function startSpotlightInterval() {
   spotlightInterval = setInterval(() => {
     if (!spotlightPaused) {
@@ -48,14 +42,12 @@ function startSpotlightInterval() {
   }, 5000);
 }
 
-// Stop the auto-rotation
 function stopSpotlightInterval() {
   clearInterval(spotlightInterval);
 }
 
-// Attach event listeners to popcorn icons for rating (only for index.php/index.html)
 function attachPopcornEventListeners() {
-  const popcornIcons = document.querySelectorAll('.movies-wrapper .popcorn-icon'); // Only target popcorn icons in the "Top 10 Movies" section
+  const popcornIcons = document.querySelectorAll('.movies-wrapper .popcorn-icon');
   const ratingOverlay = document.getElementById('rating-overlay');
   const ratingPopup = document.getElementById('rating-popup');
   const popupMovieTitle = document.getElementById('popup-movie-title');
@@ -68,17 +60,15 @@ function attachPopcornEventListeners() {
 
   popcornIcons.forEach(icon => {
     icon.addEventListener('click', (e) => {
-      e.preventDefault(); // Prevent the surrounding <a> tag from navigating
-      e.stopPropagation(); // Stop the event from bubbling up to the <a> tag
+      e.preventDefault();
+      e.stopPropagation();
       currentMovieId = icon.getAttribute('data-movie-id');
       const movieTitle = icon.getAttribute('data-movie-title');
       popupMovieTitle.textContent = movieTitle;
 
-      // Reset previous selections
       selectedRating = 0;
       popcornImages.forEach(img => img.classList.remove('selected'));
 
-      // Show the popup and overlay
       if (ratingOverlay && ratingPopup) {
         ratingOverlay.style.display = 'block';
         ratingPopup.style.display = 'block';
@@ -99,13 +89,7 @@ function attachPopcornEventListeners() {
   if (submitRatingBtn) {
     submitRatingBtn.addEventListener('click', () => {
       if (selectedRating > 0) {
-        console.log(`Movie ID: ${currentMovieId}, Rating: ${selectedRating} popcorns`);
         alert(`You rated ${popupMovieTitle.textContent} with ${selectedRating}/5 popcorns!`);
-
-        // Here you can add code to save the rating to a database via an API call
-        // Example: fetch('submit_rating.php', { method: 'POST', body: JSON.stringify({ movieId: currentMovieId, rating: selectedRating }) });
-
-        // Close the popup
         if (ratingOverlay && ratingPopup) {
           ratingOverlay.style.display = 'none';
           ratingPopup.style.display = 'none';
@@ -124,12 +108,10 @@ function attachPopcornEventListeners() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Spotlight initialized");
 
-  // Attach popcorn rating event listeners (only for index.php/index.html)
   attachPopcornEventListeners();
-
   showFeatured(currentFeatured);
   startSpotlightInterval();
 
@@ -141,109 +123,27 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const nextBtn = document.getElementById("next-featured");
   const prevBtn = document.getElementById("prev-featured");
-
   if (nextBtn) nextBtn.addEventListener("click", nextFeatured);
   if (prevBtn) prevBtn.addEventListener("click", prevFeatured);
-});
 
-// Support.php
-document.querySelectorAll('.faq-question').forEach(button => {
-  button.addEventListener('click', () => {
-    const answer = button.nextElementSibling;
-    const plus = button.querySelector('.plus');
-    const isOpen = answer.classList.contains('open');
+  // FAQ Toggle
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const answer = button.nextElementSibling;
+      const plus = button.querySelector('.plus');
+      const isOpen = answer.classList.contains('open');
 
-    // Close all
-    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
-    document.querySelectorAll('.plus').forEach(p => p.textContent = "+");
+      document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.plus').forEach(p => p.textContent = "+");
 
-    if (!isOpen) {
-      answer.classList.add('open');
-      plus.textContent = "−";
-    }
-  });
-});
-
-// Nav bar 
-document.addEventListener("DOMContentLoaded", () => {
-  const profileToggle = document.getElementById("profile-toggle");
-  const profileDropdown = document.getElementById("profile-dropdown");
-
-  if (profileToggle && profileDropdown) {
-    profileToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      profileDropdown.classList.toggle("hidden");
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
-        profileDropdown.classList.add("hidden");
+      if (!isOpen) {
+        answer.classList.add('open');
+        plus.textContent = "−";
       }
     });
-  }
-
-  // Category dropdown toggle
-  const dropdownBtn = document.getElementById("dropdown-button");
-  const dropdownMenu = document.getElementById("dropdown-menu");
-
-  if (dropdownBtn && dropdownMenu) {
-    dropdownBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdownMenu.classList.toggle("hidden");
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!dropdownMenu.contains(e.target) && !dropdownBtn.contains(e.target)) {
-        dropdownMenu.classList.add("hidden");
-      }
-    });
-
-    // Category filter handling (optional functionality)
-    document.querySelectorAll(".category-option").forEach(option => {
-      option.addEventListener("click", (e) => {
-        const category = e.target.dataset.category;
-        dropdownBtn.textContent = `${category} ⬇`;
-        dropdownMenu.classList.add("hidden");
-
-        // You can call a filter function here if needed
-        // filterByCategory(category);
-      });
-    });
-  }
-});
-
-function addToWatchlist(movieId) {
-  fetch('add_to_watchlist.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: `movie_id=${movieId}`
-  })
-  .then(res => res.json())
-  .then(data => {
-    showPopup(data.message, data.success ? 'success' : 'error');
-  })
-  .catch(err => {
-    console.error(err);
-    showPopup("Something went wrong.", "error");
   });
-}
 
-function showPopup(message, type) {
-  const popup = document.createElement('div');
-  popup.className = `watchlist-popup ${type}`;
-  popup.textContent = message;
-  document.body.appendChild(popup);
-
-  setTimeout(() => popup.remove(), 3000);
-}
-
-
-// Review function
-document.addEventListener("DOMContentLoaded", () => {
+  // Review Form Toggle
   const toggleReviewBtn = document.getElementById("toggle-review-form");
   const reviewForm = document.getElementById("review-form");
   const form = document.getElementById("submit-review-form");
@@ -272,17 +172,78 @@ document.addEventListener("DOMContentLoaded", () => {
       if (result.success) {
         form.reset();
         reviewForm.style.display = "none";
-        setTimeout(() => location.reload(), 1000); // reload to show the new review
+        setTimeout(() => location.reload(), 1000);
       }
     });
   }
 });
 
+function addToWatchlist(movieId) {
+  fetch('add_to_watchlist.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `movie_id=${movieId}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    showPopup(data.message, data.success ? 'success' : 'error');
+  })
+  .catch(err => {
+    console.error(err);
+    showPopup("Something went wrong.", "error");
+  });
+}
+
+function addToLikes(event, movieId, element) {
+  try {
+    event.stopPropagation();
+    console.log("🔥 Sending like for movie ID:", movieId);
+
+    fetch('add_like.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `movie_id=${movieId}`
+    })
+    .then(res => {
+      console.log("📦 Raw response:", res);
+      return res.json();
+    })
+    .then(data => {
+      console.log("✅ Response JSON:", data);
+      if (data.success) {
+        element.textContent = data.liked ? '❤️' : '♡';
+      }
+      showPopup(data.message, data.success ? 'success' : 'error');
+    })
+    .catch((fetchError) => {
+      console.error("❌ Fetch failed inside then():", fetchError);
+      showPopup("Something went wrong while liking the movie.", "error");
+    });
+
+  } catch (jsError) {
+    console.error("❌ JS Error outside fetch:", jsError);
+    showPopup("Unexpected JavaScript error.", "error");
+  }
+}
+
+
+function showPopup(message, type) {
+  const popup = document.createElement('div');
+  popup.className = `watchlist-popup ${type}`;
+  popup.textContent = message;
+  document.body.appendChild(popup);
+
+  setTimeout(() => popup.remove(), 3000);
+}
+
 function sortMovies() {
   const sortValue = document.getElementById("sort-select").value;
   const movieCards = Array.from(document.querySelectorAll(".movie-card"));
 
-  // Try all common containers
   const containers = [
     document.querySelector(".scroll-container"),
     document.querySelector(".movies-wrapper .movies-container"),
@@ -298,103 +259,35 @@ function sortMovies() {
     const ratingA = parseFloat(a.dataset.rating || 0);
     const ratingB = parseFloat(b.dataset.rating || 0);
     const yearA = parseInt(a.dataset.year || 0);
-    const yearB = parseInt(a.dataset.year || 0);
+    const yearB = parseInt(b.dataset.year || 0);
 
     switch (sortValue) {
-      case "rating-desc":
-        return ratingB - ratingA;
-      case "rating-asc":
-        return ratingA - ratingB;
-      case "year-desc":
-        return yearB - yearA;
-      case "year-asc":
-        return yearA - yearB;
-      default:
-        return 0;
+      case "rating-desc": return ratingB - ratingA;
+      case "rating-asc": return ratingA - ratingB;
+      case "year-desc": return yearB - yearA;
+      case "year-asc": return yearA - yearB;
+      default: return 0;
     }
   });
 
-  // Clear and re-append sorted cards
   container.innerHTML = "";
   movieCards.forEach(card => container.appendChild(card));
 }
 
-document.querySelectorAll('.edit-review-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    const reviewId = button.dataset.reviewId;
-    const form = document.getElementById(`edit-form-${reviewId}`);
-    const display = document.getElementById(`review-text-${reviewId}`);
+document.addEventListener("DOMContentLoaded", () => {
+  const profileToggle = document.getElementById("profile-toggle");
+  const profileDropdown = document.getElementById("profile-dropdown");
 
-    if (form && display) {
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-      display.style.display = display.style.display === 'none' ? 'block' : 'none';
-    }
-  });
-});
+  if (profileToggle && profileDropdown) {
+    profileToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle("hidden");
+    });
 
-document.querySelectorAll('.edit-review-form').forEach(form => {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const reviewId = form.dataset.reviewId;
-    const formData = new FormData(form);
-    const resultBox = form.querySelector('.edit-result');
-
-    try {
-      const response = await fetch('update_reviews.php', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (result.status === 'success') {
-        const textDisplay = document.getElementById(`review-text-${reviewId}`);
-        const ratingDisplay = document.getElementById(`review-rating-${reviewId}`);
-
-        if (textDisplay) textDisplay.innerText = formData.get('review_text');
-        if (ratingDisplay) ratingDisplay.innerText = `⭐ ${parseFloat(formData.get('rating')).toFixed(1)}`;
-
-        form.style.display = 'none';
-        if (textDisplay) textDisplay.style.display = 'block';
+    document.addEventListener("click", (e) => {
+      if (!profileDropdown.contains(e.target) && !profileToggle.contains(e.target)) {
+        profileDropdown.classList.add("hidden");
       }
-
-      resultBox.textContent = result.message;
-      resultBox.className = `edit-result ${result.status}`;
-    } catch (error) {
-      resultBox.textContent = 'An error occurred. Please try again.';
-      resultBox.className = 'edit-result error';
-    }
-  });
+    });
+  }
 });
-
-document.querySelectorAll('.delete-review-btn').forEach(button => {
-  button.addEventListener('click', async () => {
-    const reviewId = button.dataset.reviewId;
-
-    if (confirm("Are you sure you want to delete this review?")) {
-      try {
-        const res = await fetch('delete_review.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: `review_id=${reviewId}`
-        });
-
-        const result = await res.json();
-
-        if (result.status === 'success') {
-          const reviewBox = document.querySelector(`.review-box[data-review-id='${reviewId}']`);
-          if (reviewBox) reviewBox.remove();
-        } else {
-          alert(result.message || 'Delete failed.');
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Error deleting review.");
-      }
-    }
-  });
-});
-

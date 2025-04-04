@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
             <div class="movie-details">
               <h3>${movie.title}</h3>
-              <p class="meta">${movie.release_date} &nbsp; ⭐ ${movie.vote_average.toFixed(1)}</p>
+              <p class="meta">${movie.release_date} &nbsp; ⭐ ${movie.vote_average.toFixed(2)}</p>
               <a href="movie_info.php?id=${movie.id}" class="btn">View Details</a>
             </div>
           `;

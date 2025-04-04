@@ -38,8 +38,6 @@ if (isset($_SESSION['user_id'])) {
             <label for="login-password">Password</label>
             <input type="password" id="login-password" name="pwd" placeholder="Enter your password" required>
         </div>
-        <a href="forget_password.php" class="forget-password">Forget Password?</a>
-        <br>
         <button type="submit" class="submit-btn">Login</button>
         </form>
 

@@ -15,7 +15,8 @@ $username = $_SESSION['username'];
 $email = $_SESSION['email'];
 
 $upload_message = '';
-$profile_image = 'images/default-profile.png';
+$default_image = 'images/default-profile.png';
+$profile_image = ''; // Start blank
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_picture'])) {
     $upload_dir = 'uploads/profile_pics/';
@@ -61,8 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_picture'])) 
 }
 
 $user_profile = getUserProfile($userId);
-if ($user_profile && isset($user_profile['profile_pic']) && !empty($user_profile['profile_pic'])) {
-    $profile_image = $user_profile['profile_pic'];
+$profile_path = $user_profile['profile_pic'] ?? '';
+
+if (!empty($profile_path) && file_exists($profile_path)) {
+    $profile_image = $profile_path;
+} else {
+    $profile_image = ''; // empty, show placeholder box
 }
 
 $watchlist = getMovieFromWatchListByUserId($userId);
@@ -88,8 +93,13 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
   <div class="profile-container">
     <div class="profile-details">
       <div class="profile-image-container">
-        <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" class="profile-image">
+        <?php if (!empty($profile_image)): ?>
+          <img src="<?= htmlspecialchars($profile_image) ?>" alt="Profile Picture" class="profile-image">
+        <?php else: ?>
+          <div class="blank-profile-box">No Image</div>
+        <?php endif; ?>
       </div>
+
       <div class="profile-info">
         <h2><?= htmlspecialchars($username) ?></h2>
         <p>Email: <?= htmlspecialchars($email) ?></p>
@@ -109,6 +119,7 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
       </div>
     </div>
 
+    <!-- Watchlist and Reviews (unchanged) -->
     <div class="watchlist-container">
       <h3>Your Watchlist</h3>
       <?php if (!$hasWatchlist): ?>
@@ -164,7 +175,6 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
                 <br><br>
                 <button class="btn edit-review-btn" data-review-id="<?= $review['review_id'] ?>">✏️ Edit</button>
                 <button type="button" class="btn delete-review-btn" data-review-id="<?= $review['review_id'] ?>">🗑️ Delete</button>
-
               </div>
               <form class="edit-review-form" id="edit-form-<?= $review['review_id'] ?>" data-review-id="<?= $review['review_id'] ?>" style="display: none;">
                 <textarea name="review_text" required><?= htmlspecialchars($review['review']) ?></textarea>

@@ -108,10 +108,8 @@ if ($isLocalMovie) {
       <p><strong>Genres:</strong> <?= htmlspecialchars($genres) ?></p>
       <p><strong>Overview:</strong><br><?= nl2br(htmlspecialchars($overview)) ?></p>
 
-      <form action="add_to_watchlist.php" method="POST" style="margin-top: 1rem;">
-        <input type="hidden" name="movie_id" value="<?= $movieId ?>">
-        <button class="btn">+ Add to Watchlist</button>
-      </form>
+      <button class="btn" style="margin-top: 1rem;" onclick="addToWatchlist(<?= $movieId ?>)">+ Add to Watchlist</button>
+
 
       <div style="margin-top: 1rem;">
         <a href="submit_review.php?id=<?= $movieId ?>">
@@ -142,7 +140,12 @@ if ($isLocalMovie) {
     <?php foreach ($reviews as $review): ?>
       <div class="review-box">
         <div class="review-header">
-          <img src="<?= $review['profile_pic'] ?: 'images/default-profile.png' ?>" alt="Profile Pic" class="review-profile-pic">
+        <?php if (!empty($review['profile_pic']) && file_exists($review['profile_pic'])): ?>
+    <img src="<?= htmlspecialchars($review['profile_pic']) ?>" alt="Profile Pic" class="review-profile-pic">
+  <?php else: ?>
+    <div class="blank-review-pic">No Image</div>
+  <?php endif; ?>
+
           <strong><?= htmlspecialchars($review['username']) ?></strong>
           <span class="review-date"><?= date("Y-m-d H:i", strtotime($review['created_at'])) ?></span>
         </div>
