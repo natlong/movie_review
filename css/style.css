@@ -2782,12 +2782,3 @@ nav a.nav-link:hover {
   opacity: 1; /* Make button visible */
   transform: translateX(-50%) translateY(0); /* Smooth animation when shown */
 }
-
-.in-watchlist {
-  background-color: #28a745; /* Bootstrap green */
-  color: white;
-  border: none;
-}
-.in-watchlist:hover {
-  background-color: #218838; /* Darker green on hover */
-}
