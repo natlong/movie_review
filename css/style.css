@@ -2588,24 +2588,23 @@ nav.transparent {
   padding-right: 10px;           /* prevent scrollbar from overlapping */
 }
 
-.review-scroll-area::-webkit-scrollbar {
-  width: 8px;
-html, body {
-  height: auto !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+.like-icon {
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  display: inline-block;
+  color: #ffcc00;
+}
+.like-icon:hover {
+  color: red;
 }
 
-.review-scroll-area::-webkit-scrollbar-thumb {
-  background-color: #ffc107;
-  border-radius: 4px;
-}
-
-.review-header {
+.button-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  margin-top: 10px;
+  gap: 8px;
 }
 
 .review-profile-pic {
@@ -2614,6 +2613,9 @@ html, body {
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid #ffc107;
+.button-container .btn {
+  flex-grow: 1;
+  padding: 6px 12px;
 }
 
 /* Remove blue color and underline from nav links */
@@ -2625,6 +2627,11 @@ nav a.nav-link:visited {
   display: block;
   overflow: visible;
   height: auto;
+.button-container .like-icon {
+  font-size: 22px;
+  cursor: pointer;
+  color: #ffcc00;
+  transition: color 0.2s ease;
 }
 
 nav a.nav-link:hover {
@@ -2633,6 +2640,8 @@ nav a.nav-link:hover {
 .movie-card {
   min-height: 400px;
   height: auto;
+.button-container .like-icon:hover {
+  color: red;
 }
 
 

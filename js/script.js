@@ -196,33 +196,6 @@ function addToWatchlist(movieId) {
   });
 }
 
-function addToLikes(event, movieId, element) {
-  event.stopPropagation();
-  console.log("Clicked element:", element);
-  fetch('add_like.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: `movie_id=${movieId}`
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log("✅ Like response:", data);
-
-    if(data.success){
-    element.textContent = data.liked ? '❤️' : '♡';
-    }
-    showPopup(data.message, data.success?'success': 'error');
-  })
-  .catch(()=>{
-    console.error("❌ Like error:", err);
-
-    showPopup("Something went wrong while liking the movie.", "error");
-
-  });
-}
-
 function showPopup(message, type) {
   const popup = document.createElement('div');
   popup.className = `watchlist-popup ${type}`;
@@ -282,4 +255,123 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+});
+document.querySelectorAll(".edit-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.id;
+    const form = document.querySelector(`.edit-form[data-id='${id}']`);
+    form.classList.remove("hidden");
+    btn.style.display = "none";
+  });
+});
+
+document.querySelectorAll(".cancel-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const form = btn.closest(".edit-form");
+    form.classList.add("hidden");
+    const id = form.dataset.id;
+    document.querySelector(`.edit-btn[data-id='${id}']`).style.display = "inline-block";
+  });
+});
+
+document.querySelectorAll(".edit-form").forEach(form => {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const id = form.dataset.id;
+
+    const res = await fetch("edit_review.php", {
+      method: "POST",
+      body: formData
+    });
+
+    const text = await res.text();
+    if (text.trim() === "success") {
+      location.reload();
+    } else {
+      alert("Update failed: " + text);
+    }
+  });
+});
+
+function addToLikes(event, movieId, element) {
+  event.stopPropagation();
+  console.log("Adding like for movie ID:", movieId);
+  fetch('add_like.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: `movie_id=${movieId}`
+      })
+  .then(res => res.json())
+  .then(data => {
+    console.log(data);
+    if(data.success){
+    element.textContent = data.liked ? '❤️' : '♡';
+    }
+    showPopup(data.message, data.success?'success': 'error');
+  })
+  .catch(()=>{
+    showPopup("Something went wrong while liking the movie.", "error");
+
+  });
+}
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.edit-review-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const reviewId = button.dataset.reviewId;
+      const form = document.getElementById(`edit-form-${reviewId}`);
+      const display = document.getElementById(`review-text-${reviewId}`);
+
+      // Toggle visibility
+      if (form.style.display === 'none') {
+        form.style.display = 'block';
+        display.style.display = 'none';
+      } else {
+        form.style.display = 'none';
+        display.style.display = 'block';
+      }
+    });
+  });
+
+  document.querySelectorAll('.edit-review-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const reviewId = form.dataset.reviewId;
+      const formData = new FormData(form);
+      const resultBox = form.querySelector('.edit-result');
+
+      try {
+        const response = await fetch('update_review.php', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          const textDisplay = document.getElementById(`review-text-${reviewId}`);
+          const ratingDisplay = document.getElementById(`review-rating-${reviewId}`);
+
+          // Update the text and rating on the page
+          textDisplay.innerText = formData.get('review_text');
+          ratingDisplay.innerText = `⭐ ${parseFloat(formData.get('rating')).toFixed(1)}`;
+
+          form.style.display = 'none';
+          textDisplay.style.display = 'block';
+        }
+
+        resultBox.textContent = result.message;
+        resultBox.className = `edit-result ${result.status}`;
+      } catch (error) {
+        resultBox.textContent = 'An error occurred. Please try again.';
+        resultBox.className = 'edit-result error';
+      }
+    });
+  });
 });

@@ -72,9 +72,18 @@
             return $result->fetch_assoc();  // Returns movie data if found
         } else {
             return null;  // Return null if no movie found
-        }
+        }        
+    }
 
-        
+    function insertMovie($movie_id, $movie_title, $movie_description, $genre, $ratings){
+        $conn = connectToDB();
+        $stmt = $conn->prepare("INSERT INTO movie (movie_id, movie_title, movie_description, genre, ratings) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("issss", $movie_id, $movie_title, $movie_description, $genre, $ratings);
+        if($stmt->execute()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     function getTopGenresFromWatchlist($user_id, $limit = 3) {
@@ -445,5 +454,20 @@
         $conn->close();
         return $result;
     }
+
+
+    
+    function updateReview($reviewId, $newText, $newRating) {
+        global $conn;
+        $stmt = $conn->prepare("UPDATE reviews SET review = ?, rating = ? WHERE id = ?");
+        $stmt->bind_param("sdi", $newText, $newRating, $reviewId);
+        return $stmt->execute();
+    }
+
+
+
     
 ?>
+
+
+

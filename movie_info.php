@@ -2,20 +2,6 @@
 session_start();
 require_once 'sql/queries.php';
 
-// ✅ Helper to resolve poster path
-function resolvePosterPath($path) {
-    if (!$path) return 'images/image_not_found.jpg';
-
-    // API-style path (e.g., "/abc.jpg")
-    if (str_starts_with($path, '/')) return 'https://image.tmdb.org/t/p/w500' . $path;
-
-    // Absolute URL (already hosted)
-    if (str_starts_with($path, 'http')) return $path;
-
-    // Local file (uploaded)
-    return file_exists(__DIR__ . '/' . $path) ? $path : 'images/image_not_found.jpg';
-}
-
 $movieId = $_GET['id'] ?? null;
 if (!$movieId) die("Movie ID not provided.");
 
@@ -23,12 +9,14 @@ $isLocalMovie = $movieId >= 10000000;
 $reviews = getReviewsByMovieId($movieId);
 
 // Fetch movie data
+/*
 if ($isLocalMovie) {
     $movieData = getAllMoviesByMovieId($movieId);
     if (!$movieData) die("Local movie not found.");
 
     $title = $movieData['movie_title'];
-    $poster = resolvePosterPath($movieData['img_link'] ?? null);
+    //$posterPath = $movieData['img_link'] ?? 'images/image_not_found.jpg';
+    //$poster = file_exists($posterPath) ? $posterPath : 'images/image_not_found.jpg';
     $overview = $movieData['movie_description'];
     $rating = $movieData['ratings'] ?? 'N/A';
     $release = 'N/A';
@@ -36,6 +24,36 @@ if ($isLocalMovie) {
     $videoKey = null;
     $cast = [];
     $recommendations = [];
+}*/
+if ($isLocalMovie) {
+  $movieData = getAllMoviesByMovieId($movieId);
+  if (!$movieData) {
+      die("Local movie not found.");
+  }
+
+  $title = $movieData['movie_title'];
+    // Get the image path from the DB (or fallback)
+    $posterPath = $movieData['img_link'] ?? 'images/image_not_found.jpg';
+    
+    // For local images, ensure the URL is absolute relative to the document root.
+    // For example, if the DB returns "imgs/example.jpg" and your image folder is in the root,
+    // this changes it to "/imgs/example.jpg".
+    if ($posterPath !== 'images/image_not_found.jpg' && $posterPath[0] !== '/') {
+        $posterPath = '/' . $posterPath;
+    }
+    
+    // You can also add an optional file_exists check using DOCUMENT_ROOT if desired.
+    // $fullPath = $_SERVER['DOCUMENT_ROOT'] . $posterPath;
+    // $poster = file_exists($fullPath) ? $posterPath : '/images/image_not_found.jpg';
+    // For simplicity, we assume the DB value is correct and use it directly.
+    $poster = $posterPath;
+  $overview = $movieData['movie_description'];
+  $rating = $movieData['ratings'] ?? 'N/A';
+  $release = 'N/A';
+  $genres = $movieData['genre'];
+  $videoKey = null;
+  $cast = [];
+  $recommendations = [];
 } else {
     $response = fetchMovieDetails($movieId);
     if (!$response || !isset($response['movieData'])) {
@@ -74,10 +92,10 @@ if ($isLocalMovie) {
       <p><strong>Genres:</strong> <?= htmlspecialchars($genres) ?></p>
       <p><strong>Overview:</strong><br><?= nl2br(htmlspecialchars($overview)) ?></p>
 
-      <!-- AJAX-based watchlist button -->
-      <button class="btn" style="margin-top: 1rem;" onclick="addToWatchlist(<?= $movieId ?>)">
-        + Add to Watchlist
-      </button>
+      <form action="add_to_watchlist.php" method="POST" style="margin-top: 1rem;">
+        <input type="hidden" name="movie_id" value="<?= $movieId ?>">
+        <button class="btn">+ Add to Watchlist</button>
+      </form>
 
       <div style="margin-top: 1rem;">
         <a href="submit_review.php?id=<?= $movieId ?>">
@@ -102,25 +120,22 @@ if ($isLocalMovie) {
 <!-- Review Section -->
 <div class="reviews-container">
   <h2>User Reviews</h2>
-
   <?php if (empty($reviews)): ?>
     <p>No reviews yet. Be the first to write one!</p>
   <?php else: ?>
-    <div class="reviews-scroll">
-      <?php foreach ($reviews as $review): ?>
-        <div class="review-box">
-          <div class="review-header">
-            <img src="<?= $review['profile_pic'] ?: 'images/default-profile.png' ?>" alt="Profile Pic" class="review-profile-pic">
-            <strong><?= htmlspecialchars($review['username']) ?></strong>
-            <span class="review-date"><?= date("Y-m-d H:i", strtotime($review['created_at'])) ?></span>
-          </div>
-          <div class="review-body">
-            <p><?= nl2br(htmlspecialchars($review['review'])) ?></p>
-            <p>⭐ <?= number_format($review['rating'], 1) ?>/5</p>
-          </div>
+    <?php foreach ($reviews as $review): ?>
+      <div class="review-box">
+        <div class="review-header">
+          <img src="<?= $review['profile_pic'] ?: 'images/default-profile.png' ?>" alt="Profile Pic" class="review-profile-pic">
+          <strong><?= htmlspecialchars($review['username']) ?></strong>
+          <span class="review-date"><?= date("Y-m-d H:i", strtotime($review['created_at'])) ?></span>
         </div>
-      <?php endforeach; ?>
-    </div>
+        <div class="review-body">
+          <p><?= nl2br(htmlspecialchars($review['review'])) ?></p>
+          <p>⭐ <?= number_format($review['rating'], 1) ?>/5</p>
+        </div>
+      </div>
+    <?php endforeach; ?>
   <?php endif; ?>
 </div>
 
