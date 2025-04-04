@@ -8,84 +8,52 @@ if (!$movieId) die("Movie ID not provided.");
 $isLocalMovie = $movieId >= 10000000;
 $reviews = getReviewsByMovieId($movieId);
 
-// Fetch movie data
-/*
-if ($isLocalMovie) {
-    $movieData = getAllMoviesByMovieId($movieId);
-    if (!$movieData) die("Local movie not found.");
-
-    $title = $movieData['movie_title'];
-    //$posterPath = $movieData['img_link'] ?? 'images/image_not_found.jpg';
-    //$poster = file_exists($posterPath) ? $posterPath : 'images/image_not_found.jpg';
-    $overview = $movieData['movie_description'];
-    $rating = $movieData['ratings'] ?? 'N/A';
-    $release = 'N/A';
-    $genres = $movieData['genre'];
-    $videoKey = null;
-    $cast = [];
-    $recommendations = [];
-}*/
-
 function getPosterURL($posterPath) {
-  if (!$posterPath) {
-      return '/images/image_not_found.jpg';
-  }
-  // If it's an API poster (path from TMDb), it starts with a slash.
+  if (!$posterPath) return '/images/image_not_found.jpg';
   if (str_starts_with($posterPath, '/')) {
       return 'https://image.tmdb.org/t/p/w200' . $posterPath;
-  }
-  // If it's a local image stored in the DB (in the "imgs/" folder, for example),
-  // ensure it is an absolute URL relative to your site's root.
-  elseif (str_starts_with($posterPath, 'imgs/') || str_starts_with($posterPath, 'uploads/')) {
+  } elseif (str_starts_with($posterPath, 'imgs/') || str_starts_with($posterPath, 'uploads/')) {
       return '/' . $posterPath;
   }
   return '/images/image_not_found.jpg';
 }
 
-
 if ($isLocalMovie) {
-
-
   $movieData = getAllMoviesByMovieId($movieId);
-  if (!$movieData) {
-      die("Local movie not found.");
+  if (!$movieData) die("Local movie not found.");
+
+  $movieData['poster']   = $movieData['img_link'];
+  $movieData['title']    = $movieData['movie_title'];
+  $movieData['overview'] = $movieData['movie_description'];
+  $movieData['rating']   = $movieData['ratings'] ?? 'N/A';
+  $movieData['release']  = 'N/A';
+  $movieData['genres']   = $movieData['genre'];
+
+  $title        = $movieData['title'];
+  $poster       = getPosterURL($movieData['poster']);
+  $overview     = $movieData['overview'];
+  $rating       = $movieData['rating'];
+  $release      = $movieData['release'];
+  $genres       = $movieData['genres'];
+  $videoKey     = null;
+  $cast         = [];
+  $recommendations = [];
+} else {
+  $response = fetchMovieDetails($movieId);
+  if (!$response || !isset($response['movieData'])) {
+      die("API Movie not found.");
   }
 
-   // Standardize local DB fields to match the API format:
-    // Use "poster" instead of "img_link", and match other keys.
-    $movieData['poster']   = $movieData['img_link'];
-    $movieData['title']    = $movieData['movie_title'];
-    $movieData['overview'] = $movieData['movie_description'];
-    $movieData['rating']   = $movieData['ratings'] ?? 'N/A';
-    $movieData['release']  = 'N/A';
-    $movieData['genres']   = $movieData['genre'];
-    
-    // Now extract standardized fields:
-    $title        = $movieData['title'];
-    $poster       = getPosterURL($movieData['poster']);
-    $overview     = $movieData['overview'];
-    $rating       = $movieData['rating'];
-    $release      = $movieData['release'];
-    $genres       = $movieData['genres'];
-    $videoKey     = null;
-    $cast         = [];
-    $recommendations = [];
-} else {
-    $response = fetchMovieDetails($movieId);
-    if (!$response || !isset($response['movieData'])) {
-        die("API Movie not found.");
-    }
-
-    $movieData = $response['movieData'];
-    $title = $movieData['title'];
-    $poster = $movieData['poster'];
-    $overview = $movieData['overview'];
-    $rating = $movieData['rating'];
-    $release = $movieData['release'];
-    $genres = $movieData['genres'];
-    $videoKey = $movieData['videoKey'];
-    $cast = $movieData['cast'];
-    $recommendations = $movieData['recommendations'];
+  $movieData = $response['movieData'];
+  $title = $movieData['title'];
+  $poster = $movieData['poster'];
+  $overview = $movieData['overview'];
+  $rating = $movieData['rating'];
+  $release = $movieData['release'];
+  $genres = $movieData['genres'];
+  $videoKey = $movieData['videoKey'];
+  $cast = $movieData['cast'];
+  $recommendations = $movieData['recommendations'];
 }
 ?>
 <!DOCTYPE html>
@@ -109,7 +77,6 @@ if ($isLocalMovie) {
       <p><strong>Overview:</strong><br><?= nl2br(htmlspecialchars($overview)) ?></p>
 
       <button class="btn" style="margin-top: 1rem;" onclick="addToWatchlist(<?= $movieId ?>)">+ Add to Watchlist</button>
-
 
       <div style="margin-top: 1rem;">
         <a href="submit_review.php?id=<?= $movieId ?>">
@@ -141,10 +108,10 @@ if ($isLocalMovie) {
       <div class="review-box">
         <div class="review-header">
         <?php if (!empty($review['profile_pic']) && file_exists($review['profile_pic'])): ?>
-    <img src="<?= htmlspecialchars($review['profile_pic']) ?>" alt="Profile Pic" class="review-profile-pic">
-  <?php else: ?>
-    <div class="blank-review-pic">No Image</div>
-  <?php endif; ?>
+          <img src="<?= htmlspecialchars($review['profile_pic']) ?>" alt="Profile Pic" class="review-profile-pic">
+        <?php else: ?>
+          <div class="blank-review-pic">No Image</div>
+        <?php endif; ?>
 
           <strong><?= htmlspecialchars($review['username']) ?></strong>
           <span class="review-date"><?= date("Y-m-d H:i", strtotime($review['created_at'])) ?></span>

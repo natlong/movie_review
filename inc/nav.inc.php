@@ -12,7 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
   <nav>
     <!-- Left Section: Logo and Primary Links -->
     <div class="nav-left">
-      <a href="<?= (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') ? 'admin_index.php' : 'index.php' ?>">
+      <a href="index.php">
         <img src="images/MovieVerse_Logo.png" alt="MovieVerse Logo" class="nav-logo">
       </a>
       <div class="nav-links">

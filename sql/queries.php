@@ -233,7 +233,48 @@
         $conn->close();
         return $movies;  // 
     }
+
+    function getMovieListFromLikedListByUserId($user_id){
+        $conn = connectToDB();
+        $stmt = $conn->prepare("SELECT movie_id FROM movie_likes WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
     
+        $movies = [];
+        while ($row = $result->fetch_assoc()) {
+            $movies[] = $row;
+        }
+    
+        $stmt->close();
+        $conn->close();
+        return $movies;  //
+    }
+    
+    function getLastLikedMoviesByUserId($user_id){
+        $conn = connectToDB();
+        $stmt = $conn->prepare("SELECT movie_id, created_at FROM movie_likes WHERE user_id = ? ORDER BY created_at DESC LIMIT 1");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $mostRecent = $result->fetch_assoc(); // Returns null if no results
+
+        $stmt->close();
+        $conn->close();
+
+        return $mostRecent;
+    }
+
+    function getRecommendedMoviesBasedOnLastLiked($movie_id, $limit = 10){
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $url = "https://api.themoviedb.org/3/movie/$movie_id/recommendations?api_key=$apiKey";
+    
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+    
+        return array_slice($data['results'], 0, $limit);
+    }
     
     //reviews 
     function getUserById($user_id) {
@@ -306,36 +347,36 @@
     }
     
     function fetchMovieDetails($movieId) {
-        $apiKey = '0898e5d05464d2b33011428dac1eee0f';  // your API key
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
+        $url = "https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&append_to_response=videos,credits,recommendations";
     
-        // Fetch movie details from TMDb API
-        $details = json_decode(file_get_contents("https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&append_to_response=videos,credits,recommendations"), true);
-    
-        // If no movie found, return false
-        if (!$details || isset($details['status_code'])) {
-            return false; // or handle the error gracefully
+        $json = @file_get_contents($url);
+        if (!$json) {
+            file_put_contents(__DIR__ . "/error_log.txt", "❌ Failed to fetch TMDb movie for ID $movieId\n", FILE_APPEND);
+            return false;
         }
     
-        // Prepare the movie data
-        $movieData = [
-            'title' => htmlspecialchars($details['title']),
-            'poster' => "https://image.tmdb.org/t/p/w500" . $details['poster_path'],
-            'overview' => $details['overview'],
-            'rating' => number_format($details['vote_average'], 2),
-            'release' => $details['release_date'],
-            'genres' => implode(', ', array_column($details['genres'], 'name')),
-            'videoKey' => $details['videos']['results'][0]['key'] ?? null,
-            'cast' => array_slice($details['credits']['cast'], 0, 5),
-            'recommendations' => array_slice($details['recommendations']['results'], 0, 5)
+        $details = json_decode($json, true);
+        if (!$details || isset($details['status_code'])) {
+            file_put_contents(__DIR__ . "/error_log.txt", "❌ TMDb API error for ID $movieId: " . json_encode($details) . "\n", FILE_APPEND);
+            return false;
+        }
+    
+        return [
+            'movieData' => [  // ✅ Wrap everything under this key
+                'title' => htmlspecialchars($details['title']),
+                'poster' => $details['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $details['poster_path'] : 'images/image_not_found.jpg',
+                'overview' => $details['overview'],
+                'rating' => number_format($details['vote_average'], 2),
+                'release' => $details['release_date'] ?? 'N/A',
+                'genres' => implode(', ', array_column($details['genres'] ?? [], 'name')),
+                'videoKey' => $details['videos']['results'][0]['key'] ?? null,
+                'cast' => array_slice($details['credits']['cast'] ?? [], 0, 5),
+                'recommendations' => array_slice($details['recommendations']['results'] ?? [], 0, 5)
+            ]
         ];
-    
-        // Check if the movie exists in your database
-        // $movieExists = getAllMoviesByMovieId($movieId);  // Your function to check if the movie exists in DB
-    
-        // Return both movie data and existence check result
-        // return ['movieData' => $movieData, 'movieExists' => $movieExists];
-        return ['movieData' => $movieData];
     }
+    
     //top movie
     function fetchTopRatedMovies($limit = 50) {
         $apiKey = '0898e5d05464d2b33011428dac1eee0f';

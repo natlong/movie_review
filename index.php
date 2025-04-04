@@ -81,6 +81,14 @@ while ($row = $likedResult->fetch_assoc()) {
         $watchlistMovieIds = getMovieFromWatchListByUserId($user_id);
         $topGenres = getTopGenresFromWatchlist($user_id);
         $recommendedMovies = getTopMoviesByGenresExcluding($topGenres, $watchlistMovieIds, 10);
+        $lastLikedMovie = getLastLikedMoviesByUserId($user_id);
+        $lastLikedMovieTitle = getAllMoviesByMovieId($lastLikedMovie['movie_id'])['movie_title'] ?? 'a movie';
+        if ($lastLikedMovie) {
+            $becauseWatched = getRecommendedMoviesBasedOnLastLiked($lastLikedMovie['movie_id'], 10);
+        } else {
+            $becauseWatched = null;
+        }
+        
     ?>
 
     <?php if (!empty($recommendedMovies)): ?>
@@ -93,7 +101,10 @@ while ($row = $likedResult->fetch_assoc()) {
                 <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
                 <h3><?= htmlspecialchars($movie['title']) ?></h3>
                 <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
-                <button class="btn">+ Watchlist</button>
+                <div class="button-container">
+                    <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
+                    <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
+                </div>
                 </div>
             </a>
             <?php endforeach; ?>
@@ -101,6 +112,29 @@ while ($row = $likedResult->fetch_assoc()) {
         </section>
     <?php else: ?>
         <p style="text-align:center; color:#aaa;">No personalized recommendations yet. Add movies to your watchlist to get started!</p>
+    <?php endif; ?>
+
+    <?php if (!empty($becauseWatched)): ?>
+        <section class="likes-container">
+        <header class="header-title">Because you watched <?= htmlspecialchars($lastLikedMovieTitle) ?></header>
+        <div class="scroll-container">
+            <?php foreach ($becauseWatched as $movie): ?>
+            <a href="movie_info.php?id=<?= $movie['id'] ?>" class="movie-link">
+                <div class="movie-card">
+                <img src="https://image.tmdb.org/t/p/w500<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="movie-img">
+                <h3><?= htmlspecialchars($movie['title']) ?></h3>
+                <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
+                <div class="button-container">
+                    <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
+                    <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
+                </div>
+                </div>
+            </a>
+            <?php endforeach; ?>
+        </div>
+        </section>
+    <?php else: ?>
+        <p style="text-align:center; color:#aaa;">No personalized recommendations yet. Like Movies to get started!</p>
     <?php endif; ?>
 <?php endif; ?>
 
