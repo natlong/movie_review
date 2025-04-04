@@ -294,38 +294,62 @@
         $results = [];
     
         // TMDb API search
-        $apiKey = 'YOUR_API_KEY';
+        $apiKey = '0898e5d05464d2b33011428dac1eee0f';
         $url = "https://api.themoviedb.org/3/search/movie?api_key={$apiKey}&query=" . urlencode($query);
+        
+        // Fetch the API response
         $apiResponse = file_get_contents($url);
+        if ($apiResponse === false) {
+            error_log("TMDb API call failed for URL: $url");
+        }
+        
         $data = json_decode($apiResponse, true);
-        if ($data && isset($data['results'])) {
-            $results = array_slice($data['results'], 0, 10); // Limit API results
+        if (!$data) {
+            error_log("Failed to decode API response: " . $apiResponse);
+        }
+        
+        // Check if the API returned results
+        if ($data && isset($data['results']) && is_array($data['results'])) {
+            $results = array_slice($data['results'], 0, 10); // Limit API results to 10 entries
+        } else {
+            error_log("No API results found or unexpected API response structure: " . print_r($data, true));
         }
     
         // Local DB search
         $conn = connectToDB();
         if ($conn) {
             $stmt = $conn->prepare("SELECT * FROM movie WHERE movie_title LIKE CONCAT('%', ?, '%')");
-            $stmt->bind_param("s", $query);
-            $stmt->execute();
-            $dbResult = $stmt->get_result();
-    
-            while ($row = $dbResult->fetch_assoc()) {
-                $results[] = [
-                    'id' => $row['movie_id'],
-                    'title' => $row['movie_title'],
-                    'release_date' => 'N/A',
-                    'vote_average' => 0,
-                    'poster_path' => $row['img_link'] // your local img
-                ];
+            if (!$stmt) {
+                error_log("DB Prepare error: " . $conn->error);
+            } else {
+                $stmt->bind_param("s", $query);
+                if (!$stmt->execute()) {
+                    error_log("DB Execute error: " . $stmt->error);
+                } else {
+                    $dbResult = $stmt->get_result();
+                    while ($row = $dbResult->fetch_assoc()) {
+                        // Append local DB results to the results array
+                        $results[] = [
+                            'id' => $row['movie_id'],
+                            'title' => $row['movie_title'],
+                            'release_date' => 'N/A',
+                            'vote_average' => 0,
+                            'poster_path' => $row['img_link'] // your local image path
+                        ];
+                    }
+                }
+                $stmt->close();
             }
-    
-            $stmt->close();
             $conn->close();
+        } else {
+            error_log("DB connection failed.");
         }
     
         return $results;
     }
+    
+    
+    
     
     // Profile picture functions
     

@@ -19,7 +19,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 25px 20px;
   flex-wrap: wrap;
   position: sticky;
   top: 0;
@@ -915,6 +915,7 @@ body {
   color: #fff !important; /* Light text */
   font-family: Arial, sans-serif;
   text-align: center;
+  padding-top: 70px;
 }
 
 /* Header and Team Section */
@@ -2126,42 +2127,6 @@ nav.transparent {
 .upload-status.error {
   background-color: #f8d7da;
   color: #721c24;
-}
-
-* Genre bar styling */
-.genre-bar {
-  display: flex;
-  overflow-x: auto;
-  gap: 10px;
-  padding: 10px 0;
-  white-space: nowrap;
-  scrollbar-width: thin; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
-}
-
-/* Hide scrollbar for Webkit browsers (Chrome, Safari) */
-.genre-bar::-webkit-scrollbar {
-  display: none;
-}
-
-.genre-btn {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
-}
-
-.genre-btn:hover {
-  background-color: #555;
-}
-
-.genre-btn.active {
-  background-color: #fff;
-  color: #000;
 }
 
 
