@@ -1,16 +1,19 @@
 <?php
 session_start();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/style.css?v=<?= time(); ?>">
+  <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
   <title>About Us - MovieVerse</title>
-  <!-- Include head.inc.php here once to avoid duplicate output -->
   <?php include 'inc/head.inc.php'; ?>
 </head>
+
 <body>
   <?php include 'inc/nav.inc.php'; ?>
 
@@ -21,26 +24,64 @@ session_start();
     </header>
 
     <!-- Mission and Values Section -->
-    <section class="mission-values my-5">
-      <div class="row">
-        <!-- Our Mission -->
-        <div class="col-md-6">
-          <h2>Our Mission</h2>
-          <p>
-            At <strong>MovieVerse</strong>, our mission is to provide honest, insightful, and detailed movie reviews that help movie lovers discover the films that resonate with them the most. We strive to create a community-driven platform where all movie enthusiasts can share their opinions, engage with fellow cinephiles, and make informed decisions on their next movie experience. Our reviews are grounded in passion, expertise, and a love for storytelling, ensuring that each film is discussed with the depth and attention it deserves.
-          </p>
-        </div>
-        <!-- Our Values -->
-        <div class="col-md-6">
-          <h2>Our Values</h2>
-          <ul>
-            <li><strong>Honesty in Reviews:</strong> Transparent insights that help users make informed decisions.</li>
-            <li><strong>Community-Driven:</strong> Built by movie lovers, for movie lovers.</li>
-            <li><strong>Respect for All Opinions:</strong> Fostering inclusivity and healthy discussion.</li>
-          </ul>
+    <section class="mission-values-container">
+      <!-- Mission Section -->
+      <div class="mission-box">
+        <h2>Our Mission</h2>
+        <p>
+          At <strong>MovieVerse</strong>, our mission is to provide honest, insightful, and detailed movie reviews that help movie lovers discover the films that resonate with them the most. We strive to create a community-driven platform where all movie enthusiasts can share their opinions, engage with fellow cinephiles, and make informed decisions on their next movie experience.
+        </p>
+        <p>
+          Founded in 2025 by passionate movie lovers, MovieVerse aims to empower viewers with the tools they need for informed and passionate movie discussions. Whether you are a casual viewer or a seasoned cinephile, we provide a space to share opinions, discover hidden gems, and engage in thought-provoking conversations about cinema.
+        </p>
+        <p>
+          Our reviews are grounded in passion, expertise, and a love for storytelling, ensuring that each film is discussed with the depth and attention it deserves. Through a transparent and community-driven approach, we strive to foster an inclusive space for diverse perspectives, where every opinion is respected and valued.
+        </p>
+      </div>
+
+
+      <!-- Values Chart Section -->
+      <div class="values-box">
+        <h2>Our Values</h2>
+        <div class="values-cards">
+          <div class="value-card red fade-in">
+            <h3>Honesty in Reviews</h3>
+            <p>Transparent insights to guide informed decisions.</p>
+          </div>
+          <div class="value-card yellow fade-in delay-1">
+            <h3>Community-Driven</h3>
+            <p>Built by movie lovers, for movie lovers.</p>
+          </div>
+          <div class="value-card green fade-in delay-2">
+            <h3>Respect for All Opinions</h3>
+            <p>Fostering inclusive, healthy discussion.</p>
+          </div>
         </div>
       </div>
     </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const animatedCards = document.querySelectorAll(".value-card");
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationPlayState = "running";
+              observer.unobserve(entry.target); // Animate only once
+            }
+          });
+        }, {
+          threshold: 0.3
+        });
+
+        animatedCards.forEach(card => {
+          card.style.animationPlayState = "paused"; // Pause by default
+          observer.observe(card);
+        });
+      });
+    </script>
+
 
     <!-- Meet Our Team Section -->
     <section class="team my-5">
@@ -93,5 +134,56 @@ session_start();
   <!-- Optional Bootstrap JS if needed -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('valuesChart').getContext('2d');
+    const valuesChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Honesty in Reviews', 'Community-Driven', 'Respect for All Opinions'],
+        datasets: [{
+          label: 'Core Values',
+          data: [35, 35, 30],
+          backgroundColor: [
+            '#cc0000', // red
+            '#ffcc00', // yellow
+            '#4caf50' // green
+          ],
+          borderColor: '#111',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: {
+          duration: 1800, // in ms
+          easing: 'easeOutBounce', // animation style
+          animateRotate: true,
+          animateScale: true
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white',
+              font: {
+                size: 14
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: 'MovieVerse Core Values',
+            color: '#fff',
+            font: {
+              size: 18
+            }
+          }
+        }
+      }
+    });
+  </script>
+
 </body>
+
 </html>

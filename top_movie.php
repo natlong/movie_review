@@ -15,6 +15,8 @@ $topMovies = fetchTopRatedMovies(250);
   <script src="js/script.js?v=<?= time() ?>" defer></script>
 </head>
 <body>
+<button id="backToTopBtn" title="Go to top"> ↑ Back to top</button>  
+
 
 <main class="container">
   <h2 class="text-center text-white mb-4" style="text-align: center; color: white; margin-top: 20px;">
@@ -41,5 +43,27 @@ $topMovies = fetchTopRatedMovies(250);
 </main>
 
 <?php include 'inc/footer.inc.php'; ?>
+
+<script>
+  // Get the button
+  const backToTopBtn = document.getElementById('backToTopBtn');
+
+  // Show the button when the user scrolls down
+  window.onscroll = function() {
+    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+      backToTopBtn.classList.add("show");
+    } else {
+      backToTopBtn.classList.remove("show");
+    }
+  };
+
+  // Smooth scroll to the top when clicked
+  backToTopBtn.addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
 </body>
 </html>
