@@ -188,6 +188,10 @@ function addToWatchlist(movieId) {
   })
   .then(res => res.json())
   .then(data => {
+    if (data.success) {
+      element.textContent = data.in_watchlist ? 'In Watchlist' : '+ Watchlist';
+      element.classList.toggle('in-watchlist', data.in_watchlist);
+    }
     showPopup(data.message, data.success ? 'success' : 'error');
   })
   .catch(err => {

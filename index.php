@@ -125,7 +125,11 @@ while ($row = $likedResult->fetch_assoc()) {
                 <h3><?= htmlspecialchars($movie['title']) ?></h3>
                 <p class="movie-info"><?= $movie['release_date'] ?> • ⭐ <?= number_format($movie['vote_average'], 2) ?></p>
                 <div class="button-container">
-                    <button class="btn top10-watchlist-btn" onclick="addToWatchlist(<?= $movie['id'] ?>)">+ Watchlist</button>
+                <button class="btn top10-watchlist-btn <?= in_array($movie['id'], $watchlistMovieIds) ? 'in-watchlist' : '' ?>" 
+                        onclick="addToWatchlist(<?= $movie['id'] ?>, this)">
+                <?= in_array($movie['id'], $watchlistMovieIds) ? 'In Watchlist' : '+ Watchlist' ?>
+                </button>
+
                     <span class="like-icon" onclick="addToLikes(event, <?= $movie['id'] ?>, this)"><?= in_array($movie['id'], $likedMovies) ? '❤️' : '♡' ?></span>
                 </div>
                 </div>

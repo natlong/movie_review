@@ -136,13 +136,12 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
               if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
               $data = $movieDetails['movieData'];
             ?>
-            <a href="movie_info.php?id=<?= $movieId ?>" class="movie-link">
-              <div class="movie-card">
-                <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
-                <h3><?= htmlspecialchars($data['title']) ?></h3>
-                <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
-              </div>
-            </a>
+            <div class="movie-card">
+              <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
+              <h3><?= htmlspecialchars($data['title']) ?></h3>
+              <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
+              <a href="movie_info.php?id=<?= $movie['id'] ?>" class="btn">View Details</a>
+            </div>
           <?php endforeach; ?>
         </div>
       <?php endif; ?>
@@ -162,13 +161,12 @@ $hasReviews = is_array($reviews) && count($reviews) > 0;
               if (!$movieDetails || !isset($movieDetails['movieData'])) continue;
               $data = $movieDetails['movieData'];
             ?>
-            <a href="movie_info.php?id=<?= $movieId ?>" class="movie-link">
-              <div class="movie-card">
-                <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
-                <h3><?= htmlspecialchars($data['title']) ?></h3>
-                <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
-              </div>
-            </a>
+            <div class="movie-card">
+              <img src="<?= htmlspecialchars($data['poster']) ?>" alt="<?= htmlspecialchars($data['title']) ?>" class="movie-img">
+              <h3><?= htmlspecialchars($data['title']) ?></h3>
+              <p class="movie-info"><?= htmlspecialchars($data['release']) ?> • ⭐ <?= htmlspecialchars($data['rating']) ?></p>
+              <a href="movie_info.php?id=<?= $movie['id'] ?>" class="btn">View Details</a>
+            </div>
           <?php endforeach; ?>
         </div>
       <?php endif; ?>

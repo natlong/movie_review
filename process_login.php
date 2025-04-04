@@ -43,15 +43,8 @@ if ($success && $_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["email"] = $user["email"];
             $_SESSION["profile_pic"] = $user["profile_pic"];
             $_SESSION["role"] = $user["role"];
-
-            // 🔁 Redirect based on role
-            if ($user["role"] === "admin") {
-                header("Location: admin_index.php");
-                exit();
-            } else {
                 header("Location: index.php");
                 exit();
-            }
 
         } else {
             // Password didn't match
